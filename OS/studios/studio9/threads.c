@@ -65,7 +65,4 @@ int main( int argc, char* argv[] ){
             exit(-1);
         }
     }
-    //Hello there
-    //And I'm so sorry
-    //I cannot sleep, I cannot dream tonight
 }
