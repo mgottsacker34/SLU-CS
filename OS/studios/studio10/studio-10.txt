@@ -28,11 +28,17 @@ Race is 311795
 Race is -330189
 Race is -115288
 
-6) Yes, the program still exhibits the same behavior with values, 1,000,000 and 500,000 in the adder and subtractor functions. When the value is only 1000, the program typically returns 0, but occasionally will print small, incorrect values such as “-414”, “-82”, and “-129”.
+6) I think this is happening because both threads are accessing the same location of race in the system memory to do their computations. I think the maximum/minimum number would be +/-2 million +/-1 if one thread finished just as the other tried to finish its last iteration by recovering the value of race.
 
-7) No, it could not. Because there would only be one core, only one thread would be able to run at a time.
+7) Yes, the program still exhibits the same behavior with values, 1,000,000 and 500,000 in the adder and subtractor functions. When the value is only 1000, the program typically returns 0, but occasionally will print small, incorrect values such as “-414”, “-82”, and “-129”.
 
-8) 
+8) No, it could not. Because there would only be one core, only one thread would be able to run at a time.
+
+9) By restricting the program to only operating on one processor, it always (out of ~50 tests) resolves int race to 0 correctly.
+
+10) The program takes much longer to run, but race still resolves to 0 by the end of the program.
+
+11) The program was so much slower because the single processor had to execute 400 million  commands. However, it returned the anticipated result of race = 0 because only one process was accessing that space in memory at a time. 
 
 
 
