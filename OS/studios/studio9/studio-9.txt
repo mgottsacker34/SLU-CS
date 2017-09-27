@@ -1,0 +1,52 @@
+1) Matt Gannon and Matt Gottsacker
+
+2) When successful, pthread_create() returns 0, otherwise, it returns an error number to indicate a variety of potential errors (EAGAIN if the system does not have enough resources, EPERM if the caller does not have appropriate permission, or EINVAL if the value specified by the arg attr is invalid.
+
+3)
+void* thread_entry(void* args) {
+    printf("Thread entry program called\n");
+    return NULL;
+}
+
+4) Starting thread entry function...
+
+5) 
+struct thread_struct{
+  int arg1;
+  char* arg2;
+  int ret;
+};
+
+6) Starting thread entry function...
+thread arg1: 0
+thread arg2: This is arg2
+thread ret: 1
+
+7) Starting thread entry function...
+thread arg1: 0
+thread arg2: This is arg2
+thread ret: 1
+thread ret is now: 2
+
+8) Starting thread entry function...
+thread arg1: 0
+thread arg2: This is thread 0
+thread ret: 1
+Starting thread entry function...
+thread arg1: 0
+thread arg2: This is thread 1
+thread ret: 1
+Starting thread entry function...
+thread arg1: 0
+thread arg2: This is thread 2
+thread ret: 1
+Starting thread entry function...
+thread arg1: 0
+thread arg2: This is thread 3
+thread ret: 1
+Starting thread entry function...
+thread arg1: 0
+thread arg2: This is thread 4
+thread ret: 1
+
+9) The output ordering by each thread is seemingly random. We think this is because each thread is executing independently. There does seem to be a slight pattern to it, for example, thread 0 tends to print first, and thread 4 tends to print last. We think this is because of the order in which the threads are initialized by the first for loop.

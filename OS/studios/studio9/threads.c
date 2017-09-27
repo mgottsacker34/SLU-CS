@@ -7,10 +7,11 @@
 #include <stdlib.h> //For exit()
 #include <stdio.h> //For printf()
 #include <signal.h> //For signal()
+#define buffSize 2048
 
 struct thread_struct{
     int arg1;
-    char* arg2;
+    char arg2[buffSize];
     int ret;
 };
 
@@ -39,7 +40,6 @@ int main( int argc, char* argv[] ){
     int N = 5;
     pthread_t threads[N];
     struct thread_struct structs[N];
-    unsigned buffSize = 2048;
     
     int i =0;
     
@@ -47,7 +47,7 @@ int main( int argc, char* argv[] ){
         
         //Define structs values
         structs[i].arg1 = 0;
-        structs[i].arg2 = "This is arg2";
+        int print_ret = snprintf(structs[i].arg2, buffSize, "This is thread %d", i);
         structs[i].ret = 1;
         
         int create_ret = pthread_create(&threads[i], NULL, thread_entry, &structs[i]);
@@ -55,31 +55,16 @@ int main( int argc, char* argv[] ){
             printf("Error creating thread. Error #%d. Exiting.", create_ret);
             exit(-1);
         }
-        
-        printf("First check\n");
-        
-        int join_ret = pthread_join(threads[i], NULL);
-        if(join_ret != 0){
-            printf("Error joining thread. Error #%d. Exiting.", join_ret);
-            exit(-1);
-        }
-        printf("Second check\n");
-        
-        //snprintf(structs[i].arg2, buffSize, "This is thread %d", i);
     }
-    
-    printf("Got out of first loop\n");
-    
+
     int c = 0;
     for(; c < N; c++) {
-        printf("Got to second loop\n");
-        //printf("arg2 of %d is \"%s\"\n", c, structs[c].arg2);
-        int print_ret = snprintf(structs[c].arg2, buffSize, "This is thread %d", c);
-        if(print_ret != 0) {
-            printf("snprint failed and returned %d\n", print_ret);
+        int join_ret = pthread_join(threads[c], NULL);
+        if(join_ret != 0){
+            printf("Error joining thread. Error #%d. Exiting.\n", join_ret);
+            exit(-1);
         }
     }
-    
 }
 
 
