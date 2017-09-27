@@ -1,0 +1,94 @@
+calcIntent open a calculator
+calcIntent start a calculator
+calcIntent new calculator
+calcIntent new
+calcIntent calculator
+calcIntent start
+calcIntent begin
+calcIntent open
+calcIntent start a new calculator
+calcIntent open a new calculator
+calcIntent begin a new calculator
+calcIntent clear
+calcIntent clear the calculator
+calcIntent clear calculator
+calcIntent open calculator
+calcIntent begin calculator
+calcIntent calc
+calcIntent calculate
+
+addIntent add {valA} and {valB}
+addIntent add {valA} to {valB}
+addIntent {valA} plus {valB}
+addIntent {valA} and {valB}
+addIntent put {valA} and {valB} together
+addIntent combine {valA} and {valB}
+addIntent what is {valA} plus {valB}
+addIntent what's {valA} plus {valB}
+
+subIntent subtract {valB} from {valA}
+subIntent {valA} minus {valB}
+subIntent {valA} less {valB}
+subIntent what is {valA} minus {valB}
+subIntent what's {valA} minus {valB}
+
+divIntent divide {valA} by {valB}
+divIntent divide {valA} from {valB}
+divIntent {valA} divided by {valB}
+divIntent what is {valA} divided by {valB}
+divIntent what's {valA} divided by {valB}
+
+multIntent multiply {valA} by {valB}
+multIntent multiply {valA} and {valB}
+multIntent {valA} times {valB}
+multIntent {valA} multiplied by {valB}
+multIntent {valA} of {valB}
+multIntent what is {valA} times {valB}
+multIntent what's {valA} times {valB}
+multIntent what is {valA} multiplied by {valB}
+multIntent what's {valA} multiplied by {valB}
+
+powIntent {valA} to the {valB}
+powIntent {valA} to the {valB} power
+powIntent {valA} to the power of {valB}
+powIntent raise {valA} to the {valB}
+powIntent raise {valA} to the {valB} power
+powIntent raise {valA} to the power of {valB}
+powIntent {valA} squared
+powIntent {valA} cubed
+powIntent what is {valA} to the {valB}
+powIntent what is {valA} to the {valB} power
+powIntent what is {valA} to the power of {valB}
+powIntent what's {valA} to the {valB}
+powIntent what's {valA} to the {valB} power
+powIntent what's {valA} to the power of {valB}
+powIntent what is {valA} squared
+powIntent what is {valA} cubed
+powIntent what's {valA} squared
+powIntent what's {valA} cubed
+
+modIntent {valA} mod {valB}
+modIntent {valA} modulo {valB}
+modIntent {valA} modulus {valB}
+modIntent the remainder of {valA} divided by {valB}
+modIntent what is {valA} mod {valB}
+modIntent what is {valA} modulo {valB}
+modIntent what is {valA} modulus {valB}
+modIntent what is the remainder of {valA} divided by {valB}
+modIntent what's {valA} mod {valB}
+modIntent what's {valA} modulo {valB}
+modIntent what's {valA} modulus {valB}
+modIntent what's remainder of {valA} divided by {valB}
+
+logIntent log base {valA} of {valB}
+logIntent log {valA} {valB}
+logIntent log base {valA} {valB}
+logIntent log {valA} of {valB}
+logIntent what is log base {valA} of {valB}
+logIntent what is log {valA} {valB}
+logIntent what is log base {valA} {valB}
+logIntent what is log {valA} of {valB}
+logIntent what's log base {valA} of {valB}
+logIntent what's log {valA} {valB}
+logIntent what's log base {valA} {valB}
+logIntent what's log {valA} of {valB}

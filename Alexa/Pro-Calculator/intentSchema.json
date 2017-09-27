@@ -1,0 +1,120 @@
+{
+  "intents": [{
+      "intent": "AMAZON.CancelIntent",
+      "slots": []
+    },
+
+    {
+      "intent": "AMAZON.StopIntent",
+      "slots": []
+    },
+
+    {
+      "intent": "AMAZON.HelpIntent",
+      "slots": []
+    },
+
+    {
+      "intent": "calcIntent",
+      "slots": []
+    },
+
+    {
+      "intent": "addIntent",
+      "slots": [{
+          "name": "valA",
+          "type": "AMAZON.NUMBER"
+        },
+
+        {
+          "name": "valB",
+          "type": "AMAZON.NUMBER"
+        }
+      ]
+    },
+
+    {
+      "intent": "subIntent",
+      "slots": [{
+          "name": "valA",
+          "type": "AMAZON.NUMBER"
+        },
+
+        {
+          "name": "valB",
+          "type": "AMAZON.NUMBER"
+        }
+      ]
+    },
+
+    {
+      "intent": "divIntent",
+      "slots": [{
+          "name": "valA",
+          "type": "AMAZON.NUMBER"
+        },
+
+        {
+          "name": "valB",
+          "type": "AMAZON.NUMBER"
+        }
+      ]
+    },
+
+    {
+      "intent": "multIntent",
+      "slots": [{
+          "name": "valA",
+          "type": "AMAZON.NUMBER"
+        },
+
+        {
+          "name": "valB",
+          "type": "AMAZON.NUMBER"
+        }
+      ]
+    },
+
+    {
+      "intent": "powIntent",
+      "slots": [{
+          "name": "valA",
+          "type": "AMAZON.NUMBER"
+        },
+
+        {
+          "name": "valB",
+          "type": "AMAZON.NUMBER"
+        }
+      ]
+    },
+
+    {
+      "intent": "modIntent",
+      "slots": [{
+          "name": "valA",
+          "type": "AMAZON.NUMBER"
+        },
+
+        {
+          "name": "valB",
+          "type": "AMAZON.NUMBER"
+        }
+      ]
+    },
+
+    {
+      "intent": "logIntent",
+      "slots": [{
+          "name": "valA",
+          "type": "AMAZON.NUMBER"
+        },
+
+        {
+          "name": "valB",
+          "type": "AMAZON.NUMBER"
+        }
+      ]
+    }
+  ]
+}
