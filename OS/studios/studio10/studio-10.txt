@@ -1,0 +1,20 @@
+1) Matt Gannon and Matt Gottsacker
+
+2) 
+void adder(race) {
+    int i = 0;
+    for(; i<2000000; i++) {
+        race++;
+    }
+}
+
+void subtractor(race) {
+    int i = 0;
+    for(; i<2000000; i++) {
+        race--;
+    }
+}
+
+3) I think the program will hang slightly as it computes all 4 million commands. It did just this, and as a point of curiosity, I printed the final value of race (which started at race = 0), and the program output “Race is -2145483649.” When I called the functions instead of just executing the two for loops in main, the program ran almost instantly and correctly returned “Race is 0.” 
+
+4) I think the value of race will be random each time depending on the speed at which each thread accesses the data location race is stored at.
