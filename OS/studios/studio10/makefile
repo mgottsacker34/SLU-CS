@@ -1,2 +1,2 @@
 all:
-	gcc race.c -o race
+	gcc race.c -o race -lpthread
