@@ -2,12 +2,6 @@
 // 9/27/2017
 // A program to learn about the inner workings of mutex in locking race conditions
 
-#include <pthread.h> // for pthread_create()
-#include <unistd.h> //fork(), execvp(), perror(), waidpid()
-#include <stdlib.h> //For exit()
-#include <stdio.h> //For printf()
-#include <signal.h> //For signal()
-
 #include <pthread.h> // for pthread_create(), phtread_mutex_init
 #include <unistd.h> //fork(), execvp(), perror(), waidpid()
 #include <stdlib.h> //For exit()

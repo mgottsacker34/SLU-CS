@@ -46,9 +46,9 @@ int main( int argc, char* argv[] ){
     for(; i < N; i++) {
 
         //Define structs values
-        structs[i].arg1 = 0;
+        structs[i].arg1 = i;
         int print_ret = snprintf(structs[i].arg2, buffSize, "This is thread %d", i);
-        structs[i].ret = 1;
+        structs[i].ret = i;
 
         int create_ret = pthread_create(&threads[i], NULL, thread_entry, &structs[i]);
         if(create_ret != 0){

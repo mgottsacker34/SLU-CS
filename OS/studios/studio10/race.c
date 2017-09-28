@@ -11,7 +11,7 @@ int race = 0;
 
 void* adder(void *args) {
     int i = 0;
-    for(; i<200000000; i++) {
+    for(; i<20000000; i++) {
         race++;
     }
     return NULL;
@@ -19,7 +19,7 @@ void* adder(void *args) {
 
 void* subtractor(void *args) {
     int i = 0;
-    for(; i<200000000; i++) {
+    for(; i<20000000; i++) {
         race--;
     }
     return NULL;
