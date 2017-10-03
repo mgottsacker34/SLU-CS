@@ -90,4 +90,15 @@ user	0m0.427s
 sys	0m0.004s
 
 Output for 20000000:
+[gottsackermn@hopper studio13]$ time ./openmp-seq 20000000
 
+real	0m10.445s
+user	0m10.443s
+sys	0m0.000s
+[gottsackermn@hopper studio13]$ time ./openmp-par 20000000
+
+real	0m0.580s
+user	0m16.017s
+sys	0m0.013s
+
+9.  Using OpenMP for parallel computing is a lot easier to implement than Pthreads.  With pthreads, we would have had to use pthread_create() and reference a thread pointer as well as a function pointer.  We would have also had to join those threads upon computation completion.
