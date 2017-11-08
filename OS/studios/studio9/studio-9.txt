@@ -1,6 +1,6 @@
 1) Matt Gannon and Matt Gottsacker
 
-2) When successful, pthread_create() returns 0, otherwise, it returns an error number to indicate a variety of potential errors (EAGAIN if the system does not have enough resources, EPERM if the caller does not have appropriate permission, or EINVAL if the value specified by the arg attr is invalid.
+2) The return type for the thread entry point is a void*. The argument is a pointer to the entry function that it casts into a void*. 
 
 3)
 void* thread_entry(void* args) {
@@ -12,9 +12,9 @@ void* thread_entry(void* args) {
 
 5) 
 struct thread_struct{
-  int arg1;
-  char* arg2;
-  int ret;
+    int arg1;
+    char arg2[buffSize];
+    int ret;
 };
 
 6) Starting thread entry function...

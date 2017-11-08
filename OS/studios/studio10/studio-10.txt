@@ -28,7 +28,7 @@ Race is 311795
 Race is -330189
 Race is -115288
 
-6) I think this is happening because both threads are accessing the same location of race in the system memory to do their computations. I think the maximum/minimum number would be +/-2 million +/-1 if one thread finished just as the other tried to finish its last iteration by recovering the value of race.
+6) I think this is happening because both threads are accessing the same location of race in the system memory to do their computations. Based on the result I receiver in question 3, I do not think that race has a max or min value
 
 7) Yes, the program still exhibits the same behavior with values, 1,000,000 and 500,000 in the adder and subtractor functions. When the value is only 1000, the program typically returns 0, but occasionally will print small, incorrect values such as “-414”, “-82”, and “-129”.
 
