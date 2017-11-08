@@ -1,0 +1,104 @@
+1.  Matt Gottsacker, Matt Gannon
+
+2.  Results:
+[gottsackermn@hopper studio13]$ ./openmp 7
+7 is prime.
+[gottsackermn@hopper studio13]$ ./openmp 23
+23 is prime.
+[gottsackermn@hopper studio13]$ ./openmp 982451653
+982451653 is prime.
+
+3.  Output:
+time ./openmp 982451653
+982451653 is prime.
+
+real	0m0.002s
+user	0m0.000s
+sys	0m0.001s
+
+4. Output:
+./openmp 100
+2
+3
+5
+7
+11
+13
+17
+19
+23
+29
+31
+37
+41
+43
+47
+53
+59
+61
+67
+71
+73
+79
+83
+89
+97
+
+5.  Testing each number is logically independent because each computation does not require another computation to complete.  For example, it is possible to compute whether 97 is prime without needing to know whether 96 is prime.
+
+6.  Checking primality depends on checking all of the numbers in the set until a whole-number divisor is found.  105 is divisible by 5 and 7, so it is not prime.  However, it is not divisible by 9.  One needs to check all of these numbers to figure out primality, so the computations depend on the ones before it.  Once the loop finds that 5 evenly divides 105, it would return out of the loop, and the checks on 7 and 9 would never occur.
+
+7.  Yes, it matches, but the numbers are out of order because the computations are paralleled.  Output:
+./openmp-par 100
+61
+83
+29
+31
+17
+19
+73
+97
+2
+3
+23
+79
+11
+13
+89
+71
+67
+41
+43
+5
+7
+37
+59
+53
+47
+
+
+8.  Output for N=1000000:
+[gottsackermn@hopper studio13]$ time ./openmp-seq 1000000
+
+real	0m0.163s
+user	0m0.161s
+sys	0m0.000s
+[gottsackermn@hopper studio13]$ time ./openmp-par 1000000
+
+real	0m0.018s
+user	0m0.427s
+sys	0m0.004s
+
+Output for 20000000:
+[gottsackermn@hopper studio13]$ time ./openmp-seq 20000000
+
+real	0m10.445s
+user	0m10.443s
+sys	0m0.000s
+[gottsackermn@hopper studio13]$ time ./openmp-par 20000000
+
+real	0m0.580s
+user	0m16.017s
+sys	0m0.013s
+
+9.  Using OpenMP for parallel computing is a lot easier to implement than Pthreads.  With pthreads, we would have had to use pthread_create() and reference a thread pointer as well as a function pointer.  We would have also had to join those threads upon computation completion.

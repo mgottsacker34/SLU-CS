@@ -1,0 +1,56 @@
+1.  Matt Gottsacker, Matt Gannon
+
+2.  ./openmp2 15 output:
+Current loop index: 3, currently executing thread: 1
+Current loop index: 4, currently executing thread: 1
+Current loop index: 5, currently executing thread: 1
+Current loop index: 8, currently executing thread: 3
+Current loop index: 9, currently executing thread: 3
+Current loop index: 6, currently executing thread: 2
+Current loop index: 7, currently executing thread: 2
+Current loop index: 0, currently executing thread: 0
+Current loop index: 1, currently executing thread: 0
+Current loop index: 2, currently executing thread: 0
+
+
+3.  ./openmp2 15 output:
+Max threads: 4
+Current loop index: 6, currently executing thread: 2
+Current loop index: 7, currently executing thread: 2
+Current loop index: 8, currently executing thread: 3
+Current loop index: 9, currently executing thread: 3
+Current loop index: 3, currently executing thread: 1
+Current loop index: 4, currently executing thread: 1
+Current loop index: 5, currently executing thread: 1
+Current loop index: 0, currently executing thread: 0
+Current loop index: 1, currently executing thread: 0
+Current loop index: 2, currently executing thread: 0
+
+
+4.  ./openmp2 10 output:
+Max threads: 5
+Current loop index: 2, currently executing thread: 1
+Current loop index: 3, currently executing thread: 1
+Current loop index: 0, currently executing thread: 0
+Current loop index: 1, currently executing thread: 0
+Current loop index: 6, currently executing thread: 3
+Current loop index: 7, currently executing thread: 3
+Current loop index: 4, currently executing thread: 2
+Current loop index: 5, currently executing thread: 2
+Current loop index: 8, currently executing thread: 4
+Current loop index: 9, currently executing thread: 4
+
+5.  Each thread performed 5 loop iterations, which is an even distribution of work.
+
+6.  Assigning the same number of loop iterations to each thread could be a bad idea when some iterations require more work than others.  For example, an if/else statement could divide up the work unevenly depending on which condition is met.
+
+7.  I think the program will assign the first 5 iterations to the first thread, which will cause the first thread to take at least 5 seconds to execute.  The other threads will print out their information right away, but the first thread will cause the whole program to take longer.
+
+My hypothesis was confirmed.  The program took 5.004s to run, and the first thread executed all of its print statements last.
+
+8.  My program ran in 1.004s.  The first thread handled only two loop iterations total.
+
+9.  The work is much more evenly divided.  The first 5 iterations are handled by different threads.  The second thread (thread id=1) processed most of the other work (12 other iterations); I assume this is because it started and finished its sleep() work first.
+
+10.  When I increased the chunk size, the program printing output was staggered and the program took longer to run.  The chunk size corresponded to how long the program took to run.
+The chunk size indicates how many iterations into which it will break up the for loop.  Each thread executes <chunk size> iterations and then gets the next <chunk size> of iterations until the for loop finishes.  This behavior explains the lengthened runtime of the program and staggered output results.

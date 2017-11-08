@@ -1,5 +1,6 @@
 var https = require('https');
-var Alexa = require('alexa-sdk');
+// var Alexa = require('alexa-sdk');
+
 
 exports.handler = (event, context) => {
 
@@ -55,21 +56,22 @@ function onIntent(intentRequest, session, callback) {
 
 		var cardTitle = "Addition";
 
-    var intent = intentRequest.intent,
-        intentName = intentRequest.intent.name;
+    var intent = intentRequest.intent;
+    var intentName = intentRequest.intent.name;
+
+    console.log(intent.name);
 
     // dispatch custom intents to handlers here
-		switch(intentName){
+	switch(intentName){
 
-			//addition
-			case "addIntent":
-
-			  var valA = intent.getSlots().get(valA).getValue();
-				var valB = intent.getSlots().get(valB).getValue();
-				var ans = valA + valB;
-			  callback(session.attributes,
+		//addition
+		case "addIntent":
+		    var valA = intent.getSlots().get(valA).getValue();
+			var valB = intent.getSlots().get(valB).getValue();
+			var ans = valA + valB;
+	    	  callback(session.attributes,
 				  buildSpeechletResponse(cardTitle, `The answer is ${ans}`, "", "true"));
-				break;
+			break;
 
 			default:
 			  throw "Invalid intent";
