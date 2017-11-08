@@ -11,10 +11,16 @@
 #include <signal.h> //For signal()
 #include <errno.h> //For perror & errno
 
-// Create linked list structure
+// memory block structure
+struct memory_block {
+    size_t size;
+    struct memory_block* next_block;
+    struct memory_block* prev_block;
+};
 
+// Create linked list structure
 struct Node {
-    int data;
+    struct memory_block data;
     struct Node* next;
     struct Node* prev;
 };
@@ -84,57 +90,66 @@ void ReversePrint() {
     printf("\n");
 }
 
-// memory block structure
-struct memory_block {
-    size_t size;
-    struct memory_block* next_block;
-    struct memory_block* prev_block;
-};
-
 int main () {
     char *str;
-    
+
     /* Initial memory allocation */
     str = (char *) malloc(15);
     strcpy(str, "tutorialspoint");
     printf("String = %s,  Address = %u\n", str, str);
-    
+
     /* Reallocating memory */
     str = (char *) realloc(str, 25);
     strcat(str, ".com");
     printf("String = %s,  Address = %u\n", str, str);
-    
+
     free(str);
-    
+
     return(0);
 }
 
 void *mymalloc(size_t size) {
-    
-    int page_size = sysconf(_SC_PAGESIZE);
-    
+  int page_size = sysconf(_SC_PAGESIZE);
+
+  Node* ptr = head;
+
+  //check if there is a free block in list of free blocks
+  if(head->next != NULL){ //there is a block in list of free blocks
+    int bigenough = 0;
+
+    //search list for big enough block
+    while(bigenough == 0){
+	     //check if block is big enough
+       if(head.data.size >= size){  //size of block is big enough, use it.
+
+       }else{
+         ptr = ptr->next;
+       }
+     }
+   }
+
     //Get memory chunk from OS
     void* ret = sbrk(size);
-    
-    struct memory_block block
-    
+
+    struct memory_block block;
+
     //Check for success, else return NULL
     if( ret == (void*)-1 ){
         printf("Error calling sbrk!\n");
         errno = ENOMEM;
         return NULL;
     }
-    
+
     printf("Malloc called with size %d, returning pointer to %p\n", size, ret);
-    
+
     return ret;
-    
+
 }
 
 /*
  void myfree( void *ptr );
- 
+
  void *mycalloc( size_t num_of_elts, size_t elt_size ) {;
- 
+
  void *myrealloc( void *pointer, size_t size);
  */
