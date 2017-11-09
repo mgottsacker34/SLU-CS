@@ -29,21 +29,39 @@ struct Node {
 struct Node* head;          // global variable - pointer to head node.
 struct Node* tail;
 
-int main () {
+int main (int argc, const char *argv[]) {
     
+    char *str;
+    
+    /* Initial memory allocation */
+    str = (char *) mymalloc(15);
+    strcpy(str, "tutorialspoint");
+    printf("String = %s,  Address = %u\n", str, str);
+    
+    /* Reallocating memory */
+    //str = (char *) realloc(str, 25);
+    //strcat(str, ".com");
+    //printf("String = %s,  Address = %u\n", str, str);
+    
+    //free(str);
+    
+    return(0);
+    
+    /*
     //Create and destroy two arrays twice
-    int *array = (int*) mymalloc( sizeof(int) * array_size);
-    int *array2 = (int*) mymalloc( sizeof(int) * array_size);
+    int *array = (int*) mymalloc(sizeof(int) * array_size);
+    int *array2 = (int*) mymalloc(sizeof(int) * array_size);
     
     int i;
     for(i =0 ; i< array_size; i++) {
         array[i] = i;
     }
     
-    myfree(array);
-    myfree(array2);
+    //myfree(array);
+    //myfree(array2);
     
     return 0;
+    */
 }
 
 //Helper functions for malloc
@@ -78,15 +96,17 @@ struct Node *new_node(size_t size) {
     
     tail->next = new_node;
     tail = new_node;
+    
+    return tail;
 }
 
 
-void* mymalloc(size_t size) {
+void *mymalloc(size_t size) {
     
     struct Node *pointer;
     
     if (!head) {        // first call
-        pointer = request_space(size);
+        pointer = new_node(size);
         head = pointer;
         tail = head;
     } else {
@@ -98,7 +118,7 @@ void* mymalloc(size_t size) {
         }
     }
     
-    return(pointer+1);
+    return pointer + 1;
     
     /*
     int page_size = sysconf(_SC_PAGESIZE);
