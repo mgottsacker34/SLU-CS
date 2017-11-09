@@ -17,24 +17,17 @@
 #define array_size 500
 #define short_array 250
 
-/*
-// memory block structure
-struct memory_block {
-    size_t size;
-    int free; // 1 to indicate free, 0 to indicate not free
-};
-*/
-
 // Create linked list structure
 struct Node {
     size_t size;
-    int free; // 1 to indicate free, 0 to indicate not free
+    int free = 1;               // 1 to indicate free, 0 to indicate not free
     struct Node* next;
 };
 
 #define NODE_SIZE sizeof(struct Node)
 
-struct Node* head; // global variable - pointer to head node.
+struct Node* head;          // global variable - pointer to head node.
+struct Node* tail;
 
 int main () {
     
@@ -55,9 +48,25 @@ int main () {
 
 void *mymalloc(size_t size) {
     
-    int page_size = sysconf(_SC_PAGESIZE);
+    struct Node *pointer;
     
-    Node* ptr = head;
+    if (!head) {        // first call
+        pointer = request_space(size);
+        head = block;
+        tail = head;
+    } else {
+        pointer = first_free(size);
+        if (!pointer) {
+            pointer = new_node(size);
+        } else {
+            pointer->free = 0;
+        }
+    }
+    
+    return(pointer+1);
+    
+    /*
+    int page_size = sysconf(_SC_PAGESIZE);
     
     //check if there is a free block in list of free blocks
     if(head->next != NULL){ //there is a block in list of free blocks
@@ -69,8 +78,7 @@ void *mymalloc(size_t size) {
         pointer -> flag = 0;
         pointer -> next = NULL;
         
-        
-        head.next  = pointer;
+        head->next  = pointer;
         
         int bigenough = 0;
         
@@ -80,12 +88,12 @@ void *mymalloc(size_t size) {
         struct Node *free_node = first_free(current);
         
         
-    }
+    } else {
 
     printf("Malloc called with size %d, returning pointer to %p\n", size, ret);
     
     return ret;
-    
+    */
 }
 
 //Helper functions for malloc
@@ -103,10 +111,9 @@ struct Node* first_free(size_t size) {
 struct Node *new_node(size_t size) {
     
     //Get memory chunk from OS
-    void* ret = sbrk(size);
+    void* ret = sbrk(size  + NODE_SIZE);
     struct Node *new_node;
     new_node = ret;
-    
     
     //Check for success, else return NULL
     if( ret == (void*)-1 ){
@@ -115,6 +122,12 @@ struct Node *new_node(size_t size) {
         return NULL;
     }
     
+    new_node->size = size;
+    new_node->next = NULL;
+    new_node->free = 0;
+    
+    tail->next = new_node;
+    tail = new_node;
 }
     
 
