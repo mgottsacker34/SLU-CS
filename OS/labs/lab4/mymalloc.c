@@ -20,7 +20,7 @@
 // Create linked list structure
 struct Node {
     size_t size;
-    int free = 1;               // 1 to indicate free, 0 to indicate not free
+    int free;               // 1 to indicate free, 0 to indicate not free
     struct Node* next;
 };
 
@@ -46,13 +46,48 @@ int main () {
     return 0;
 }
 
-void *mymalloc(size_t size) {
+//Helper functions for malloc
+
+//Finding a the first fitting free node
+struct Node* first_free(size_t size) {
+    struct Node *current = head;
+    while((current->next != NULL) && !((current->free == 1) && (current->size >= size))){
+        current = current->next;
+    }
+    return current;
+}
+
+//Create a new node/memory block
+struct Node *new_node(size_t size) {
+    
+    //Get memory chunk from OS
+    void* ret = sbrk(size  + NODE_SIZE);
+    struct Node *new_node;
+    new_node = ret;
+    
+    //Check for success, else return NULL
+    if( ret == (void*)-1 ){
+        printf("Error calling sbrk!\n");
+        errno = ENOMEM;
+        return NULL;
+    }
+    
+    new_node->size = size;
+    new_node->next = NULL;
+    new_node->free = 0;
+    
+    tail->next = new_node;
+    tail = new_node;
+}
+
+
+void* mymalloc(size_t size) {
     
     struct Node *pointer;
     
     if (!head) {        // first call
         pointer = request_space(size);
-        head = block;
+        head = pointer;
         tail = head;
     } else {
         pointer = first_free(size);
@@ -96,40 +131,7 @@ void *mymalloc(size_t size) {
     */
 }
 
-//Helper functions for malloc
 
-//Finding a the first fitting free node
-struct Node* first_free(size_t size) {
-    struct Node *current = head;
-	while((current->next != NULL) && !((current->free == 1) && (current->size >= size))){
-        current = current->next;
-	}
-	return current;
-}
-
-//Create a new node/memory block
-struct Node *new_node(size_t size) {
-    
-    //Get memory chunk from OS
-    void* ret = sbrk(size  + NODE_SIZE);
-    struct Node *new_node;
-    new_node = ret;
-    
-    //Check for success, else return NULL
-    if( ret == (void*)-1 ){
-        printf("Error calling sbrk!\n");
-        errno = ENOMEM;
-        return NULL;
-    }
-    
-    new_node->size = size;
-    new_node->next = NULL;
-    new_node->free = 0;
-    
-    tail->next = new_node;
-    tail = new_node;
-}
-    
 
 /*
  void myfree( void *ptr );
