@@ -64,7 +64,9 @@ struct Node *new_node(size_t size) {
     
     printf("new node attributes assigned\n");
     
-    tail->next = new_node;
+    if (tail) {
+        tail->next = new_node;
+    }
     
     printf("Creating head\n");
     tail = new_node;
