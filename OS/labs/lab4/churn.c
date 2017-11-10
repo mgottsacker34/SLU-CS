@@ -20,6 +20,8 @@
 #include <unistd.h>
 #include <string.h>
 
+extern void* mymalloc(size_t size);
+
 // At any time, churn may have up to NUMSLOTS memory allocations
 #define NUMSLOTS 40
 
@@ -79,7 +81,7 @@ main(int argc, char *argv[])
       if (verbose) printf("malloc slot %d.\n",n);
 
       sizes[n] = rand() % maxblock + 1;
-      slots[n] = (char *) malloc (sizes[n]);
+      slots[n] = (char *) mymalloc (sizes[n]);
       if (slots[n] == NULL) {
 	fprintf(stderr,"out of memory\n");
 	exit(1);

@@ -10,6 +10,7 @@
 #include <stdio.h> //For printf()
 #include <signal.h> //For signal()
 #include <errno.h> //For perror & errno
+#include <string.h>
 
 //extern void* mymalloc(size_t size);
 //extern void myfree(void *ptr);
@@ -33,8 +34,9 @@ struct Node* tail;
 
 //Finding a the first fitting free node
 struct Node* first_free(size_t size) {
+    printf("first free called\n");
     struct Node *current = head;
-    while((current->next != NULL) && !((current->free == 1) && (current->size >= size))){
+    while(current && !((current->free == 1) && (current->size >= size))){
         current = current->next;
     }
     return current;
@@ -58,17 +60,16 @@ struct Node *new_node(size_t size) {
         return NULL;
     }
     
+    if (tail) {
+        tail->next = new_node;
+    }
+    
     new_node->size = size;
     new_node->next = NULL;
     new_node->free = 0;
     
     printf("new node attributes assigned\n");
     
-    if (tail) {
-        tail->next = new_node;
-    }
-    
-    printf("Creating head\n");
     tail = new_node;
     
     printf("new node set to tail\n");
@@ -89,41 +90,70 @@ void *mymalloc(size_t size) {
         tail = head;
     } else {
         pointer = first_free(size);
-        if (!pointer) {
+        
+        if (!pointer) {     //didn't find free block
             pointer = new_node(size);
-        } else {
+        } else {        //found free
             pointer->free = 0;
         }
     }
     
     return pointer + 1;
+
+}
+
+void myfree(void *ptr) {
     
 }
 
 
 
-/*
- void myfree( void *ptr );
+ /*
  void *mycalloc( size_t num_of_elts, size_t elt_size ) {;
  void *myrealloc( void *pointer, size_t size);
  */
 
 int main (int argc, const char *argv[]) {
     
+    /*
+    char *str;
+
+    // Initial memory allocation
+    str = (char *) mymalloc(15);
+    strcpy(str, "tutorialspoint");
+    printf("String = %s,  Address = %u\n", str, str);
+
+    // Reallocating memory
+    str = (char *) realloc(str, 25);
+    strcat(str, ".com");
+    printf("String = %s,  Address = %u\n", str, str);
+
+    free(str);
+
+    return(0);
+    */
+
     //Create and destroy two arrays twice
     int *array = (int*) mymalloc(sizeof(int) * array_size);
     int *array2 = (int*) mymalloc(sizeof(int) * array_size);
     
     int i;
-    for(i =0 ; i< array_size; i++) {
+    for(i = 0 ; i< array_size; i++) {
         array[i] = i;
     }
     
-    //myfree(array);
-    //myfree(array2);
+    /*
+    i = 0;
+    for(;i<array_size; i++){
+        printf("%d\n", array[i]);
+    }
+    */
     
+     
+    free(*array);
+    free(*array2);
     return 0;
-}
+    }
 
 
 
