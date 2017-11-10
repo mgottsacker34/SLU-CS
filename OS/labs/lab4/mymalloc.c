@@ -34,9 +34,8 @@ struct Node* tail;
 
 //Finding a the first fitting free node
 struct Node* first_free(size_t size) {
-    printf("first free called\n");
     struct Node *current = head;
-    while(current && !((current->free == 1) && (current->size >= size))){
+    while((current) && !((current->free == 1) && (current->size >= size))){
         current = current->next;
     }
     return current;
@@ -50,7 +49,7 @@ struct Node *new_node(size_t size) {
     //Get memory chunk from OS
     struct Node *new_node;
     new_node = sbrk(0);
-    void* ret = sbrk(size  + NODE_SIZE);
+    void* ret = sbrk(size + NODE_SIZE);
     new_node = ret;
     
     //Check for success, else return NULL
@@ -60,16 +59,17 @@ struct Node *new_node(size_t size) {
         return NULL;
     }
     
-    if (tail) {
-        tail->next = new_node;
-    }
-    
     new_node->size = size;
     new_node->next = NULL;
     new_node->free = 0;
     
     printf("new node attributes assigned\n");
     
+    if (tail) {
+        tail->next = new_node;
+    }
+    
+    printf("Creating head\n");
     tail = new_node;
     
     printf("new node set to tail\n");
@@ -90,34 +90,56 @@ void *mymalloc(size_t size) {
         tail = head;
     } else {
         pointer = first_free(size);
-        
-        if (!pointer) {     //didn't find free block
+        if (!pointer) {
             pointer = new_node(size);
-        } else {        //found free
+        } else {
             pointer->free = 0;
         }
     }
     
-    return pointer + 1;
-
-}
-
-void myfree(void *ptr) {
+    printf("pointer value: %d\n", (pointer));
+    return pointer+1;
     
 }
 
+void myfree(void *ptr) {
+    if(!ptr) { return; }
+    struct Node *node_ptr = (struct Node*) ptr - 1;;
+    node_ptr->free = 1;
+}
 
 
+void *mycalloc( size_t num_of_elts, size_t elt_size ) {
+    
+}
  /*
- void *mycalloc( size_t num_of_elts, size_t elt_size ) {;
  void *myrealloc( void *pointer, size_t size);
  */
 
 int main (int argc, const char *argv[]) {
     
+    //Create and destroy two arrays twice
+    int *array = (int*) mymalloc(sizeof(int) * array_size);
+    int *array2 = (int*) mymalloc(sizeof(int) * array_size);
+    
+    int i;
+    for(i =0 ; i< array_size; i++) {
+        array[i] = i;
+    }
+    
     /*
-    char *str;
-
+    i =0;
+    for(;i<array_size; i++){
+        printf("%d\n", array[i]);
+    }
+    */
+    
+    myfree(*array);
+    myfree(*array2);
+    
+    /*
+    //test 2
+    char* str;
     // Initial memory allocation
     str = (char *) mymalloc(15);
     strcpy(str, "tutorialspoint");
@@ -129,32 +151,8 @@ int main (int argc, const char *argv[]) {
     printf("String = %s,  Address = %u\n", str, str);
 
     free(str);
-
-    return(0);
-    */
-
-    //Create and destroy two arrays twice
-    int *array = (int*) mymalloc(sizeof(int) * array_size);
-    int *array2 = (int*) mymalloc(sizeof(int) * array_size);
     
-    int i;
-    for(i = 0 ; i< array_size; i++) {
-        array[i] = i;
-    }
-    
-    /*
-    i = 0;
-    for(;i<array_size; i++){
-        printf("%d\n", array[i]);
-    }
     */
     
-     
-    free(*array);
-    free(*array2);
     return 0;
-    }
-
-
-
-
+}
