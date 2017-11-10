@@ -2,7 +2,7 @@
  * churn.c
  *
  * usage: churn [-v] maxblock\n");
- * 
+ *
  *    Allocate & free memory
  *
  *    Tests malloc() and free() by repeatedly allocating and freeing
@@ -19,6 +19,7 @@
 #include <time.h>
 #include <unistd.h>
 #include <string.h>
+// #include <./mymalloc.c>
 
 // At any time, churn may have up to NUMSLOTS memory allocations
 #define NUMSLOTS 40
@@ -58,7 +59,7 @@ main(int argc, char *argv[])
   // Main loop:
   while (1) {
     n = rand() % NUMSLOTS;
-    
+
     if (slots[n]) {
       // Going to free slot[n]
       // Check contents to see if it's still 0,1,2,3,4,...
@@ -68,7 +69,7 @@ main(int argc, char *argv[])
 	  exit(1);
 	}
       }
-      
+
       if (verbose) printf("freeing slot %d.\n",n);
       free(slots[n]);
       slots[n] = NULL;
@@ -79,20 +80,20 @@ main(int argc, char *argv[])
       if (verbose) printf("malloc slot %d.\n",n);
 
       sizes[n] = rand() % maxblock + 1;
-      slots[n] = (char *) malloc (sizes[n]);
+      slots[n] = (char *) mymalloc (sizes[n]);
       if (slots[n] == NULL) {
 	fprintf(stderr,"out of memory\n");
 	exit(1);
       }
-      
+
       // Fill block with 0,1,2,3,4,...
       for (j=0; j<sizes[n]; j++) *(slots[n]+j) = (char) j;
 
       mallocs++;
     }
-    
+
     // Periodically report progress
-    if ((mallocs + frees) % 1000 == 0) 
+    if ((mallocs + frees) % 1000 == 0)
       printf("%ld\t%ld\t%p\n",mallocs,frees,sbrk(0));
   }
 }

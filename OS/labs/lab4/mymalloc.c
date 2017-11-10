@@ -10,6 +10,7 @@
 #include <stdio.h> //For printf()
 #include <signal.h> //For signal()
 #include <errno.h> //For perror & errno
+#include <string.h>
 
 //extern void* mymalloc(size_t size);
 //extern void myfree(void *ptr);
@@ -34,7 +35,7 @@ struct Node* tail;
 //Finding a the first fitting free node
 struct Node* first_free(size_t size) {
     struct Node *current = head;
-    while((current->next != NULL) && !((current->free == 1) && (current->size >= size))){
+    while((current) && !((current->free == 1) && (current->size >= size))){
         current = current->next;
     }
     return current;
@@ -48,7 +49,7 @@ struct Node *new_node(size_t size) {
     //Get memory chunk from OS
     struct Node *new_node;
     new_node = sbrk(0);
-    void* ret = sbrk(size  + NODE_SIZE);
+    void* ret = sbrk(size + NODE_SIZE);
     new_node = ret;
 
     //Check for success, else return NULL
@@ -96,7 +97,8 @@ void *mymalloc(size_t size) {
         }
     }
 
-    return pointer + 1;
+    printf("pointer value: %d\n", (pointer));
+    return pointer+1;
 
 }
 
@@ -121,11 +123,25 @@ int main (int argc, const char *argv[]) {
 
     i =0;
     for(;i<array_size; i++){
-      printf("%d", array[i]);
+      printf("%d, ", array[i]);
     }
 
-    //myfree(array);
-    //myfree(array2);
+    free(*array);
+    free(*array2);
 
-    return 0;
+  //   //test 2
+  //   char* str;
+  //   /* Initial memory allocation */
+  //  str = (char *) mymalloc(15);
+  //  strcpy(str, "tutorialspoint");
+  //  printf("String = %s,  Address = %u\n", str, str);
+   //
+  //  /* Reallocating memory */
+  //  str = (char *) realloc(str, 25);
+  //  strcat(str, ".com");
+  //  printf("String = %s,  Address = %u\n", str, str);
+   //
+  //  free(str);
+
+   return 0;
 }
