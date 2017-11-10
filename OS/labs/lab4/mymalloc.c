@@ -109,12 +109,20 @@ void myfree(void *ptr) {
 }
 
 
-void *mycalloc( size_t num_of_elts, size_t elt_size ) {
-    
+void *mycalloc(size_t num_of_elts, size_t elt_size) {
+    if((num_of_elts == 0) || (elt_size == 0)) {
+        return NULL;
+    }
+    size_t size = num_of_elts * elt_size;
+    void *pointer = mymalloc(size);
+    memset(pointer, 0, size);
+    return pointer;
 }
- /*
- void *myrealloc( void *pointer, size_t size);
- */
+
+
+/*
+void *myrealloc( void *pointer, size_t size);
+*/
 
 int main (int argc, const char *argv[]) {
     
