@@ -104,7 +104,7 @@ void *mymalloc(size_t size) {
 
 void myfree(void *ptr) {
     if(!ptr) { return; }
-    struct Node *node_ptr = (struct Node*) ptr - 1;;
+    struct Node *node_ptr = (struct Node*) ptr - 1;
     node_ptr->free = 1;
 }
 
@@ -120,12 +120,25 @@ void *mycalloc(size_t num_of_elts, size_t elt_size) {
 }
 
 
-/*
-void *myrealloc( void *pointer, size_t size);
-*/
+void *myrealloc(void *pointer, size_t size) {
+    if (!pointer) {
+        mymalloc(size);
+    }
+    if ((size == 0) && (pointer)) {
+        myfree(pointer);
+    }
+    
+    struct Node *node_ptr = (struct Node*) pointer - 1;
+    void* new_mem = malloc(size);
+    memcpy(new_mem, node_ptr, size);
+    myfree(node_ptr);
+    return new_mem;
+}
+
 
 int main (int argc, const char *argv[]) {
     
+    /*
     //Create and destroy two arrays twice
     int *array = (int*) mymalloc(sizeof(int) * array_size);
     int *array2 = (int*) mymalloc(sizeof(int) * array_size);
@@ -135,17 +148,18 @@ int main (int argc, const char *argv[]) {
         array[i] = i;
     }
     
-    /*
+    
     i =0;
     for(;i<array_size; i++){
         printf("%d\n", array[i]);
     }
-    */
     
     myfree(*array);
     myfree(*array2);
+    */
+     
+     
     
-    /*
     //test 2
     char* str;
     // Initial memory allocation
@@ -154,13 +168,11 @@ int main (int argc, const char *argv[]) {
     printf("String = %s,  Address = %u\n", str, str);
 
     // Reallocating memory
-    str = (char *) realloc(str, 25);
+    str = (char *) myrealloc(str, 25);
     strcat(str, ".com");
     printf("String = %s,  Address = %u\n", str, str);
 
-    free(str);
-    
-    */
+    myfree(str);
     
     return 0;
 }
