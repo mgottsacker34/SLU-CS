@@ -1,7 +1,6 @@
 // Matt Gannon & Matt Gottsacker
 // 11/4/2017
 // Program to recreate memory allocation routines
-// Doubly linked list implementation borrowed from https://gist.github.com/mycodeschool/7429492
 
 #include <sys/types.h>
 #include <pthread.h> // for pthread_create(), phtread_mutex_init
@@ -12,11 +11,6 @@
 #include <errno.h> //For perror & errno
 #include <string.h>
 
-//extern void* mymalloc(size_t size);
-//extern void myfree(void *ptr);
-
-#define array_size 500
-#define short_array 250
 
 // Create linked list structure
 struct Node {
@@ -44,8 +38,6 @@ struct Node* first_free(size_t size) {
 //Create a new node/memory block
 struct Node *new_node(size_t size) {
     
-    printf("starting new node function\n");
-    
     //Get memory chunk from OS
     struct Node *new_node;
     new_node = sbrk(0);
@@ -54,7 +46,6 @@ struct Node *new_node(size_t size) {
     
     //Check for success, else return NULL
     if( ret == (void*)-1 ){
-        printf("Error calling sbrk!\n");
         errno = ENOMEM;
         return NULL;
     }
@@ -63,29 +54,22 @@ struct Node *new_node(size_t size) {
     new_node->next = NULL;
     new_node->free = 0;
     
-    printf("new node attributes assigned\n");
     
     if (tail) {
         tail->next = new_node;
     }
     
-    printf("Creating head\n");
     tail = new_node;
-    
-    printf("new node set to tail\n");
-    
     return tail;
 }
 
 
-void *mymalloc(size_t size) {
+void *malloc(size_t size) {
     
     struct Node *pointer;
     
     if (!head) {                        // first call
-        printf("Creating head\n");
         pointer = new_node(size);
-        printf("Head succesfully created\n");
         head = pointer;
         tail = head;
     } else {
@@ -97,82 +81,40 @@ void *mymalloc(size_t size) {
         }
     }
     
-    printf("pointer value: %d\n", (pointer));
     return pointer+1;
     
 }
 
-void myfree(void *ptr) {
+void free(void *ptr) {
     if(!ptr) { return; }
     struct Node *node_ptr = (struct Node*) ptr - 1;
     node_ptr->free = 1;
 }
 
 
-void *mycalloc(size_t num_of_elts, size_t elt_size) {
+void *calloc(size_t num_of_elts, size_t elt_size) {
     if((num_of_elts == 0) || (elt_size == 0)) {
         return NULL;
     }
     size_t size = num_of_elts * elt_size;
-    void *pointer = mymalloc(size);
+    void *pointer = malloc(size);
     memset(pointer, 0, size);
     return pointer;
 }
 
 
-void *myrealloc(void *pointer, size_t size) {
+void *realloc(void *pointer, size_t size) {
     if (!pointer) {
-        mymalloc(size);
+        return malloc(size);
     }
     if ((size == 0) && (pointer)) {
-        myfree(pointer);
+        free(pointer);
+        return NULL;
     }
     
-    struct Node *node_ptr = (struct Node*) pointer - 1;
+    //struct Node *node_ptr = (struct Node*) pointer - 1;
     void* new_mem = malloc(size);
-    memcpy(new_mem, node_ptr, size);
-    myfree(node_ptr);
+    memcpy(new_mem, pointer, size);
+    free(pointer);
     return new_mem;
-}
-
-
-int main (int argc, const char *argv[]) {
-    
-    /*
-    //Create and destroy two arrays twice
-    int *array = (int*) mymalloc(sizeof(int) * array_size);
-    int *array2 = (int*) mymalloc(sizeof(int) * array_size);
-    
-    int i;
-    for(i =0 ; i< array_size; i++) {
-        array[i] = i;
-    }
-    
-    
-    i =0;
-    for(;i<array_size; i++){
-        printf("%d\n", array[i]);
-    }
-    
-    myfree(*array);
-    myfree(*array2);
-    */
-     
-     
-    
-    //test 2
-    char* str;
-    // Initial memory allocation
-    str = (char *) mymalloc(15);
-    strcpy(str, "tutorialspoint");
-    printf("String = %s,  Address = %u\n", str, str);
-
-    // Reallocating memory
-    str = (char *) myrealloc(str, 25);
-    strcat(str, ".com");
-    printf("String = %s,  Address = %u\n", str, str);
-
-    myfree(str);
-    
-    return 0;
 }
