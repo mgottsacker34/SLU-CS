@@ -1,4 +1,3 @@
 all:
-	gcc mymalloc.c -o mymalloc
-	gcc churn.c -o churn
-	gcc churn2.c -o churn2
+	gcc churn.c mymalloc.c -o churn
+	gcc churn2.c mymalloc.c -o churn2
