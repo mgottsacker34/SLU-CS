@@ -20,6 +20,7 @@ struct Node {
 };
 
 #define NODE_SIZE sizeof(struct Node)
+#define PAGE_SIZE sysconf(_SC_PAGESIZE)
 
 struct Node* head;
 struct Node* tail;
@@ -37,37 +38,42 @@ struct Node* first_free(size_t size) {
 
 //Create a new node/memory block
 struct Node *new_node(size_t size) {
-    
+
     //Get memory chunk from OS
     struct Node *new_node;
     new_node = sbrk(0);
-    void* ret = sbrk(size + NODE_SIZE);
+    int new_size = size + NODE_SIZE;
+    int rem = new_size % PAGE_SIZE;
+    if(rem != 0){
+      new_size += (PAGE_SIZE - rem);
+    }
+    void* ret = sbrk(new_size);
     new_node = ret;
-    
+
     //Check for success, else return NULL
     if( ret == (void*)-1 ){
         errno = ENOMEM;
         return NULL;
     }
-    
-    new_node->size = size;
+
+    new_node->size = (size + NODE_SIZE);
     new_node->next = NULL;
     new_node->free = 0;
-    
-    
+
+
     if (tail) {
         tail->next = new_node;
     }
-    
+
     tail = new_node;
     return tail;
 }
 
 
 void *malloc(size_t size) {
-    
+
     struct Node *pointer;
-    
+
     if (!head) {                        // first call
         pointer = new_node(size);
         head = pointer;
@@ -80,9 +86,9 @@ void *malloc(size_t size) {
             pointer->free = 0;
         }
     }
-    
+
     return pointer+1;
-    
+
 }
 
 void free(void *ptr) {
@@ -111,7 +117,7 @@ void *realloc(void *pointer, size_t size) {
         free(pointer);
         return NULL;
     }
-    
+
     //struct Node *node_ptr = (struct Node*) pointer - 1;
     void* new_mem = malloc(size);
     memcpy(new_mem, pointer, size);
