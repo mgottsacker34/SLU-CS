@@ -56,7 +56,7 @@ struct Node *new_node(size_t size) {
         return NULL;
     }
 
-    new_node->size = (size + NODE_SIZE);
+    new_node->size = size;
     new_node->next = NULL;
     new_node->free = 0;
 
@@ -66,6 +66,22 @@ struct Node *new_node(size_t size) {
     }
 
     tail = new_node;
+
+    /*
+    //Create a node that occupies left over page space
+    //Unfinished attempt to split large blocks
+
+    struct Node *bonus_node;
+    bonus_node = sbrk(0);
+    bonus_node->size = PAGE_SIZE - rem;
+    bonus_node->free = 1;
+    tail->next = bonus_node;
+    bonus_node->next = NULL;
+    tail = bonus_node;
+    free(tail);
+    return new_node;
+    */
+
     return tail;
 }
 
