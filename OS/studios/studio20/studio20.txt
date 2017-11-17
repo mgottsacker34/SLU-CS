@@ -1,0 +1,64 @@
+1) Matt Gannon and Matt Gottsacker
+
+2) HD with 20 blocks storage (contiguous):
+
+|
+|
+|
+|
+| D
+| D
+| D
+| D
+| D
+| 
+| 
+| E
+| E
+| E
+| E
+| 
+| 
+| F
+| F
+| F
+
+3) There are two free chunks of size 2 or less. Softball Q. Next question.
+
+4) The fragmentary chunks are 20% of the total disk space.
+
+5) HD with 20 blocks storage (linked-list):
+
+|
+|
+|
+|
+|
+|
+|
+| D
+| D
+| D
+| 
+| 
+| E
+| E
+| D
+| D
+| B
+| B
+| E 
+| E
+
+6) 1 chunk
+
+7) No, it does not make sense. A program larger than 2 blocks could still begin by occupying those lower to blocks, then just having a pointer to the next chunk of free space.
+
+8) 3 blocks must be read before reaching the 3500th byte of file A.
+
+9) 
+
+
+
+
+
