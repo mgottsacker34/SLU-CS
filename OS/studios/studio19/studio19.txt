@@ -41,10 +41,17 @@
 I speculate that this is the string stored to be printed from the printf command.
 
 9) 
+Entry point address:               0x400440
+ - We think this line indicates the memory address of the program pointer.
+
+Machine:                           Advanced Micro Devices X86-64
+ - We think this line describes the underlying architecture on which the program will be run.
 
 10) The offset of the .text segment of my program starts at 00000440.
+[14] .text             PROGBITS         0000000000400440  00000440
 
-11) The main function starts at byte 000000000040052d (or 13???)
+
+11) The main function starts at byte 000000000040052d
 
 Output:
 60: 000000000040052d    16 FUNC    GLOBAL DEFAULT   13 main
