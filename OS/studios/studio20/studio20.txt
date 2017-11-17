@@ -57,8 +57,40 @@
 8) 3 blocks must be read before reaching the 3500th byte of file A.
 
 9) 
+Block	|  Contents 
+------------------
+20	|  
+19	|  
+18	|  
+17	|  
+16	|  
+15	|  
+14	|  
+13	|  
+12	|  NULL
+11	|  12
+10	|  11  <- D
+9	|  
+8	|  
+7	|  NULL
+6	|  7
+5	|  10
+4	|  5  <- D
+3	|  NULL
+2	|  3  <- B
+1	|  7
+0	|  1  <- E
 
+10) 1 kb block: 10485760 entries
+4 kb block: 2621440 entries
+8 kb block: 1310720 entries
 
+11) 1: 31457280 bytes
+4: 7864320 bytes
+8: 3932160 bytes
 
+12) 1 kb block size: 3 blocks for the file -> 39 microseconds.
+2 kb block size: 2 blocks for the file -> 26 microseconds.
+4 kb block size: 1 block for the file -> 13 microseconds.
 
 
