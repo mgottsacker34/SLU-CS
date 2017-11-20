@@ -1,1 +1,23 @@
-1. Matt Gannon, Matt Gottsacker
+1.  Matt Gannon, Matt Gottsacker
+
+2.  The first 24 bits are constant; the last 8 bits vary.
+
+3.  152.221.254.0/24
+
+4.  1001100.01001110.01100101.00100011/00010100
+
+5.  164.134.0.0/16
+
+6.  SLU's host identifier has 16 bits.  SLU has 65536 assigned IP addresses.
+
+7.  B belongs to the subnet.
+
+8.  A, B, D belong to the subnet.
+
+9.  20.40.80.0/24 is the longest matching network address.
+
+10.
+A)  Ethernet0
+B)  Ethernet1
+C)  Ethernet2
+D)  Ethernet5

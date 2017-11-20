@@ -1,1 +1,21 @@
-1. Matt Gannon, Matt Gottsacker
+1.  Matt Gannon, Matt Gottsacker
+
+2.  9 bits
+
+3.
+000011110
+111011001
+111111110
+000000000
+
+4.  The parity bit will always catch the error case in which one bit is flipped.  If the parity bit itself is flipped, it will give a false negative result because it will look as if the message is compromised when in reality, only the parity bit was affected.
+
+5.  No.  This method fails every time.
+
+6.  The parity bit method properly detects an error when one of the message bits is flipped in transit.  It fails when either the parity bit is flipped or an even number of bits are flipped.
+
+7.  38 bits.
+
+8.  Overall transmission = 138 bits.  Overhead = 27.5% of transmission.
+
+9.  Overall transmission = 1538 bits.  Overhead = 2.5% of transmission.
