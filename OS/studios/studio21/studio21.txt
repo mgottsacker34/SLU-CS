@@ -1,1 +1,48 @@
-1. Matt Gannon, Matt Gottsacker
+1.  Matt Gannon, Matt Gottsacker
+
+2.  Output of `ifconfig`:
+
+br0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 165.134.107.80  netmask 255.255.255.224  broadcast 165.134.107.95
+        inet6 fe80::ec4:7aff:fe54:51da  prefixlen 64  scopeid 0x20<link>
+        ether 0c:c4:7a:54:51:da  txqueuelen 1000  (Ethernet)
+        RX packets 715452357  bytes 720720778232 (671.2 GiB)
+        RX errors 0  dropped 3958  overruns 0  frame 0
+        TX packets 563390929  bytes 1136509530538 (1.0 TiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+3.  inet: 165.135.107.80
+    inet6: fe80::ec4:7aff:fe54:51da
+
+4.  HW address: 0c:c4:7a:54:51:da
+
+5.  Output: hopper.mcs.slu.edu
+
+6.  Output:
+[gottsackermn@hopper ~]$ host futurism.com
+futurism.com has address 104.25.76.11
+futurism.com has address 104.25.77.11
+futurism.com has IPv6 address 2400:cb00:2048:1::6819:4c0b
+futurism.com has IPv6 address 2400:cb00:2048:1::6819:4d0b
+futurism.com mail is handled by 10 aspmx3.googlemail.com.
+futurism.com mail is handled by 1 aspmx.l.google.com.
+futurism.com mail is handled by 5 alt1.aspmx.l.google.com.
+futurism.com mail is handled by 5 alt2.aspmx.l.google.com.
+futurism.com mail is handled by 10 aspmx2.googlemail.com.
+
+7.  slu.edu could use multiple to ensure a high quality of service for end users.  It must manage a high volume of users with little to no change in the content provided or the speed at which it is delivered.  Also, in case one IP address gets overloaded, it is important to have a backup host to deal with additional volume.
+
+8.
+Layer 1: USB physical layer - The Universal Serial Bus protocol defines communication connection standards of computer peripherals.  This protocol is in Layer 1 because USBs connect to computer hardware to transfer data.
+
+Layer 2: Address Resolution Protocol - ARP translates network addresses (i.e. IP) to a hardware address.  This protocol falls in this layer because it is responsible for linking the software to the hardware.
+
+Layer 3: IPsec - Internet Protocol Security authenticates and encrypts data packets sent over a network.  This protocol is at this layer because it is necessary to secure applications at the IP layer, not just a higher one.
+
+Layer 4: BGP - Border Gateway Protocol defines how autonomous systems on a network exchange information by creating and maintaining routing paths.  This protocol is at this layer because it builds on the network layer; it uses the IP layer to make decisions about where to send packets.
+
+Layer 5: SMB - Server Message Block is used for "providing shared access to files, printers, and serial ports" between network hosts.  This protocol is at the Session Layer because it helps manage the connection between hosts by providing synchronization, authentication, etc.
+
+Layer 6: TLS - Transport Layer Security is a cryptographic protocol used to secure communications between web applications (like web browsers) and servers.  This protocol is at the Presentation Layer because it is necessary to secure communication between hosts and applications, not just at each respective layer.
+
+Layer 7: BitTorrent - This protocol is used for P2P file sharing over the Internet.  It sits at the Application Layer because it connects application users to each other to transfer files; a tracking server maintains one copy of the file, but each user gets the file from each other.
