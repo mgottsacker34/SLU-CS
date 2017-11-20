@@ -45,4 +45,4 @@ Layer 5: SMB - Server Message Block is used for "providing shared access to file
 
 Layer 6: TLS - Transport Layer Security is a cryptographic protocol used to secure communications between web applications (like web browsers) and servers.  This protocol is at the Presentation Layer because it is necessary to secure communication between hosts and applications, not just at each respective layer.
 
-Layer 7: BitTorrent - This protocol is used for P2P file sharing over the Internet.  It sits at the Application Layer because it connects application users to each other to transfer files; a tracking server maintains one copy of the file, but each user gets the file from each other.
+Layer 7: BitTorrent - This protocol is used for P2P file sharing over the Internet.  It sits at the Application Layer because it connects application users to each other to transfer files; a tracking server maintains one copy of the file, but each user gets the file from each other without going through a server.
