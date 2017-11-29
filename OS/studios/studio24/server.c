@@ -58,23 +58,33 @@ int main( int argc, char* argv[] ) {
   }
 
   //try and read from socket
-  FILE *server_open = fdopen(server_accept, "w+");
-  if (server_open == NULL) {
-    perror("error calling fdopen");
-    printf("exiting program\n");
-    exit(0);
+  // FILE *server_open = fdopen(server_accept, "w+");
+  // if (server_open == NULL) {
+  //   perror("error calling fdopen");
+  //   printf("exiting program\n");
+  //   exit(0);
+  // }
+
+  for(;;) {
+    FILE *server_open = fdopen(server_accept, "w+");
+    if (server_open == NULL) {
+      perror("error calling fdopen");
+      printf("exiting program\n");
+      exit(0);
+    }
+
+    char input[bufferSize];
+    char* got = "0";
+    got = fgets(input, bufferSize, server_open);
+    if (got != NULL) {
+      printf("%s", got);
+    }
+
+    // char s[bufferSize];
+    // fscanf(server_open, "%s", &s [0]);
+    // printf("%s\n", s);
   }
 
-  char s[bufferSize];
-  fscanf(server_open, "%s", &s [0]);
-  printf("%s\n", s);
-
-  // char buffer[bufferSize];
-  // char c = fgetc(server_open);
-  // while(c != EOF) {
-  //   printf ("%c", c);
-  //   c = fgetc(server_open);
-  // }
 
   //unlink the socket/path/whatever
   int server_unlink = unlink(MY_SOCK_PATH);
