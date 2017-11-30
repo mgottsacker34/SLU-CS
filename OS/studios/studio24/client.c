@@ -33,11 +33,17 @@ int main( int argc, char* argv[] ) {
   int client_connect = connect(client_socket, (struct sockaddr *) &client_addr, sizeof(struct sockaddr_un));
 
   for (;;) {
-    int reader = read(STDIN_FILENO, buffer, bufferSize);
+    int reader = read(STDIN_FILENO, buffer, bufferSize-1);
     if (reader==0) {
       break;
     }
     write(client_socket, buffer, reader);
+
+    int cmp = strncmp(buffer, "quit", 4);
+    if(cmp == 0){
+      printf("`quit` signal sent.  Exiting.\n");
+      break;
+    }
   }
 
   return 0;
