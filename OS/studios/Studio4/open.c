@@ -10,16 +10,16 @@
 #define bufferSize 200
 
 int main( int argc, char* argv[] ) {
-    
+
     char buffer[bufferSize];
-    
+
     int input = open(argv[1], O_RDONLY);
-    
+
     if (input == -1) {
-        error("Error opening file");
+        printf("Error opening file\n");
         exit(-1);
     }
-    
+
     for (;;) {
         int reader = read(input, buffer, bufferSize);
         if (reader==0) {
