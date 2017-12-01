@@ -20,13 +20,12 @@ int main( int argc, char* argv[] ) {
     perror("error calling socket");
   }
 
-  //call bind
+
   struct sockaddr_un client_addr;
   memset(&client_addr, 0, sizeof(struct sockaddr_un));  //Clears structure
 
   client_addr.sun_family = AF_LOCAL;
   strncpy(client_addr.sun_path, MY_SOCK_PATH, sizeof(client_addr.sun_path) - 1);
-
 
 
   //call connect
@@ -37,7 +36,19 @@ int main( int argc, char* argv[] ) {
     if (reader==0) {
       break;
     }
+    int quitCmp = strncmp(buffer, "quit\n", 5);
+    int exitCmp = strncmp(buffer, "exit\n", 5);
+
     write(client_socket, buffer, reader);
+
+    if(quitCmp == 0) {
+      printf("`quit` signal received.  Disconnecting user and shutting down server.\n");
+      break;
+    }
+    if(exitCmp == 0) {
+      printf("`exit` signal received.  Disconnecting user.\n");
+      break;
+    }
   }
 
   return 0;
