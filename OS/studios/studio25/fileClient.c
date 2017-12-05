@@ -61,9 +61,6 @@ int main( int argc, char* argv[] ) {
 
     printf("%s", buffer2);
 
-
-
-
   }
 
   return 0;

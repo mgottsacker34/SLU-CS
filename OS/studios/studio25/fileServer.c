@@ -61,7 +61,6 @@ int main( int argc, char* argv[] ) {
 
       //try and read from socket
       char buffer[bufferSize];
-      char *buffer_ptr = buffer;
       memset(buffer, 0, bufferSize);
       int read_cli = read(server_accept, buffer, bufferSize-1);
       if(read_cli == -1) {
@@ -72,6 +71,8 @@ int main( int argc, char* argv[] ) {
 
       int quitCmp = strncmp(buffer, "quit\n", 5);
       int exitCmp = strncmp(buffer, "exit\n", 5);
+      int lsCmp = strncmp(buffer, "ls\n", 3);
+
 
       if(quitCmp == 0) {
         printf("`quit` signal received.  Closing server.\n");
@@ -83,12 +84,30 @@ int main( int argc, char* argv[] ) {
         break;
       }
 
+      if(lsCmp == 0) {
+        FILE *in;
+        extern FILE *popen();
+        char buff_ls[512];
+        if(!(in = popen("ls", "r"))){
+            exit(1);
+        }
+        while(fgets(buff_ls, sizeof(buff_ls), in)!=NULL){
+            write(server_accept, buff_ls, 512);
+            printf("%s", buff_ls);
+        }
+        pclose(in);
+        break;
+      }
+
       printf("%s", buffer);
 
       //open file to print
-      int open_file = open(buffer_ptr, O_RDONLY);
+      const char *path = strtok(buffer, "\n");
+
+      printf("'%s'\n", path);
+      int open_file = open(path, O_RDONLY);
       if (open_file == -1) {
-          printf("Error opening file\n");
+          perror("Error opening file");
           quit = 1;
           break;
       }
@@ -96,13 +115,16 @@ int main( int argc, char* argv[] ) {
       for (;;) {
           int file_reader = read(open_file, buffer, bufferSize);
           if (file_reader==0) {
-              break;
+            quit = 1;
+            break;
           }
           write(server_accept, buffer, file_reader);
       }
 
+      if (quit == 1) {
+        break;
+      }
     }
-
 
     if (quit == 1) {
       break;
