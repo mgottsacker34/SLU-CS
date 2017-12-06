@@ -1,3 +1,4 @@
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/socket.h>
@@ -14,9 +15,18 @@
 #define bufferSize 200
 #define PORT 8888
 
+struct Client{
+  int fd;
+  char* username;
+  struct* Client next;
+}
+
 int main( int argc, char* argv[] ) {
 
   int quit = 0; //enables program to quit when quit is sent from client
+
+  struct Client *head;
+  struct Client *tail;
 
   int server_socket = socket(AF_INET, SOCK_STREAM, 0);
   if(server_socket == -1) {
@@ -52,13 +62,27 @@ int main( int argc, char* argv[] ) {
   //call accept
   for(;;) {
     socklen_t client_addr_size = sizeof(struct sockaddr_in);
-    int server_accept = accept4(server_socket, (struct sockaddr *) &client_addr, &client_addr_size, SOCK_NONBLOCK);
-    if(server_accept == -1) {
-      perror("error calling accept");
-      printf("exiting program\n");
-      exit(0);
-    } else {
-      printf("--- new connection established ---\n");
+
+    for(;;){
+      int server_accept = accept4(server_socket, (struct sockaddr *) &client_addr, &client_addr_size, SOCK_NONBLOCK);
+      if(server_accept == -1) {
+        perror("error calling accept");
+        printf("exiting program\n");
+        exit(0);
+      } else {
+        printf("--- new connection established ---\n");
+        if(head == NULL){
+          head.fd = server_accept;
+          head.username = "User";
+          head.next = NULL;
+          tail = head;
+        }else{
+          tail = tail.next;
+          tail.fd = server_accept;
+          tail.username = "User";
+          tail.next = NULL;
+        }
+      }
     }
 
     for(;;) {
