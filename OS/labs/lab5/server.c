@@ -45,6 +45,7 @@ int main( int argc, char* argv[] ) {
   struct Client *tail = malloc(sizeof(struct Client));
   tail = head;
   struct Client *current = head;
+  struct Client *current_sender = head;
 
   int server_socket = socket(AF_INET, SOCK_STREAM, 0);
   if(server_socket == -1) {
@@ -113,10 +114,10 @@ int main( int argc, char* argv[] ) {
         printf("Post set tail to next\n");
         tail->next = malloc(sizeof(struct Client));
         tail->next->fd = server_accept;
-        printf("New client's fd is %d\n", tail->fd);
         tail->next->username = "User";
         tail->next->next = NULL;
         tail = tail->next;
+        printf("New client's fd is %d\n", tail->fd);
       }
     }
 
@@ -167,7 +168,7 @@ int main( int argc, char* argv[] ) {
           if(setNameCmp == 0){
             char setNameString[bufferSize] = "Enter a new username: ";
             printf("User #%d: %s is setting a new username.", current->fd, current->username);
-            write(current->fd, setNameString, bufferSize-1);
+            // write(current->fd, setNameString, bufferSize-1);
             break;
           }
 
@@ -181,8 +182,21 @@ int main( int argc, char* argv[] ) {
           }
 
 
-          // printf("%s: %s", current->username, buffer);
-          printf("%s", buffer);
+
+          if (strlen(buffer) != 0) {
+            printf("%s: [%s]", current->username, buffer);
+            // printf("[%s]", buffer);
+          }
+          current_sender = head;
+          while(current_sender != NULL) {
+            if (current_sender->fd != current->fd) {
+              if (strlen(buffer) != 0) {
+                printf("writing\n");
+                write(current_sender->fd, buffer, bufferSize);
+              }
+            }
+            current_sender = current_sender->next;
+          }
 
           if (current->next == NULL) {
             break;
