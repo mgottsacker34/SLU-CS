@@ -15,7 +15,7 @@
 
 #define MY_SOCK_PATH "COOL_PATH"
 #define bufferSize 200
-#define PORT 8888
+// #define PORT 8889
 
 struct Client{
   int fd;
@@ -26,15 +26,14 @@ struct Client{
 int main( int argc, char* argv[] ) {
 
   int quit = 0; //enables program to quit when quit is sent from client
-  // fd_set input_set;
-  // struct timeval timeout;
-  // int ready_for_reading = 0;
-  // int read_bytes = 0;
-  // timeout.tv_sec = 0;
-  // timeout.tv_usec = 100;
   int reaccept = 0;
 
+  if(argc != 2) {
+    printf("Program requires 1 argument.\nExiting.\n");
+    exit(-1);
+  }
 
+  int PORT = atoi(argv[1]);
 
   struct Client *head = malloc(sizeof(struct Client));
   printf("Initialized head\n");
@@ -99,25 +98,25 @@ int main( int argc, char* argv[] ) {
     } else {
       printf("--- new user has joined. ---\n");
       if(head->fd == NULL){
-        printf("First client\n");
+        // printf("First client\n");
         head->fd = server_accept;
-        printf("New client's fd is %d\n", tail->fd);
+        // printf("New client's fd is %d\n", tail->fd);
         head->username = "User";
-        printf("Username set\n");
+        // printf("Username set\n");
         head->next = NULL;
-        printf("Before tail = head\n");
+        // printf("Before tail = head\n");
         tail = head;
-        printf("After tail = head\n");
+        // printf("After tail = head\n");
       } else {
-        printf("Pre set tail to next\n");
+        // printf("Pre set tail to next\n");
         // tail = tail->next;
-        printf("Post set tail to next\n");
+        // printf("Post set tail to next\n");
         tail->next = malloc(sizeof(struct Client));
         tail->next->fd = server_accept;
         tail->next->username = "User";
         tail->next->next = NULL;
         tail = tail->next;
-        printf("New client's fd is %d\n", tail->fd);
+        // printf("New client's fd is %d\n", tail->fd);
       }
     }
 
@@ -152,7 +151,7 @@ int main( int argc, char* argv[] ) {
 
           int quitCmp = strncmp(buffer, "quit\n", 5);
           int exitCmp = strncmp(buffer, "exit\n", 5);
-          int setNameCmp = strncmp(buffer, "name\n", 5);
+          int nameCmp = strncmp(buffer, "name ", 5);
 
           int listCmp = strncmp(buffer, "list\n", 5);
 
@@ -165,26 +164,31 @@ int main( int argc, char* argv[] ) {
             printf("--- %s has left the chat. ---\n", current->username);
             break;
           }
-          if(setNameCmp == 0){
-            char setNameString[bufferSize] = "Enter a new username: ";
-            printf("User #%d: %s is setting a new username.", current->fd, current->username);
+          if(nameCmp == 0){
+            char *newName = buffer + 5;
+            newName = strtok(newName, "\n");
+            printf("%s changed name to %s\n", current->username, newName);
+            printf("New name is: %s\n", newName);
+            printf("%s\n", current->username);
+            current->username = *newName;
+            // printf("User #%d: %s is setting a new username.", current->fd, current->username);
             // write(current->fd, setNameString, bufferSize-1);
             break;
           }
 
           //Checking list
-          if(listCmp == 0) {
-            struct Client *thisone = head;
-            while(thisone != NULL) {
-              printf("user #%d: %s\n", thisone->fd, current->username);
-              thisone = thisone->next;
-            }
-          }
+          // if(listCmp == 0) {
+          //   struct Client *thisone = head;
+          //   while(thisone != NULL) {
+          //     printf("user #%d: %s\n", thisone->fd, current->username);
+          //     thisone = thisone->next;
+          //   }
+          // }
 
 
 
           if (strlen(buffer) != 0) {
-            printf("%s: [%s]", current->username, buffer);
+            printf("%s: %s", current->username, buffer);
             // printf("[%s]", buffer);
           }
           current_sender = head;
@@ -192,7 +196,14 @@ int main( int argc, char* argv[] ) {
             if (current_sender->fd != current->fd) {
               if (strlen(buffer) != 0) {
                 printf("writing\n");
-                write(current_sender->fd, buffer, bufferSize);
+                // write(current_sender->fd, "Gottsacker sucks\n", 17);
+
+                char *result = malloc(strlen(current->username) + strlen(buffer) + 3);
+                strcpy(result, current->username);
+                strcat(result, ": ");
+                strcat(result, buffer);
+                write(current_sender->fd, result, bufferSize);
+
               }
             }
             current_sender = current_sender->next;
