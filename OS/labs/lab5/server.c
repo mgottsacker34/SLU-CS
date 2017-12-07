@@ -165,14 +165,15 @@ int main( int argc, char* argv[] ) {
             break;
           }
           if(nameCmp == 0){
-            char *newName = buffer + 5;
-            newName = strtok(newName, "\n");
-            printf("%s changed name to %s\n", current->username, newName);
-            printf("New name is: %s\n", newName);
-            printf("%s\n", current->username);
-            current->username = *newName;
-            // printf("User #%d: %s is setting a new username.", current->fd, current->username);
-            // write(current->fd, setNameString, bufferSize-1);
+            printf("In nameCmp\n");
+            char *newName = buffer;
+            newName = (newName+5);
+            char* res = malloc(strlen(buffer-5));
+            res = strncpy(res, newName, strlen(newName)-1);
+            // newName = strtok(newName, "\n");
+            printf("%s changed name to %s\n", current->username, res);
+            current->username = res;
+            printf("name set to: %s", current->username);
             break;
           }
 
