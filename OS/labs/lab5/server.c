@@ -10,6 +10,7 @@
 #include <fcntl.h>
 #include <netinet/in.h>
 #include <sys/time.h>
+#include <fcntl.h>
 
 
 #define MY_SOCK_PATH "COOL_PATH"
@@ -49,6 +50,13 @@ int main( int argc, char* argv[] ) {
     exit(0);
   }
 
+  int server_fcntl = fcntl(server_socket, F_SETFL, O_NONBLOCK);
+  if(server_fcntl == -1) {
+    perror("error calling fcntl");
+    printf("exiting program\n");
+    exit(0);
+  }
+
   //setup for bind
   struct sockaddr_in serv_addr, client_addr;
 
@@ -75,15 +83,14 @@ int main( int argc, char* argv[] ) {
 
   //call accept
   for(;;) {
-    printf("Entered main loop\n");
+    // printf("Entered main loop\n");
     socklen_t client_addr_size = sizeof(struct sockaddr_in);
-    printf("Pre server accept\n");
+    // printf("Pre server accept\n");
     int server_accept = accept4(server_socket, (struct sockaddr *) &client_addr, &client_addr_size, SOCK_NONBLOCK);
-    printf("Post server accept\n");
     if(server_accept == -1) {
-      perror("error calling accept");
-      printf("exiting program\n");
-      exit(0);
+      // perror("error calling accept");
+      // printf("exiting program\n");
+      // exit(0);
     } else {
       printf("--- new connection established ---\n");
       if(head->next == NULL){
@@ -109,45 +116,39 @@ int main( int argc, char* argv[] ) {
     for(;;) {
 
       //try and read from socket
-      printf("Before setting current\n");
+      // printf("Before setting current\n");
       struct Client *current = head;
-      printf("After setting current\n");
-      // while (current != NULL) {
+      // printf("After setting current\n");
+      if (current->fd != -1) {
         char buffer[bufferSize];
-        // char *buffer_ptr = buffer;
         memset(buffer, 0, bufferSize);
 
-        FD_ZERO(&input_set);
-        FD_SET(0, &input_set);
+        int read_cli = read(current->fd, buffer, bufferSize-1);
 
-        ready_for_reading = select(, &input_set, NULL, NULL, &timeout);
-        if(ready_for_reading == -1) {
-          //Nothing worth reading
-        } else {
-          int read_cli = read(current->fd, buffer, bufferSize-1);
+        // if(read_cli == -1) {
+        //   perror("error calling read");
+        //   printf("exiting program\n");
+        //   exit(0);
+        // }
 
-          if(read_cli == -1) {
-            perror("error calling read");
-            printf("exiting program\n");
-            exit(0);
-          }
+        int quitCmp = strncmp(buffer, "quit\n", 5);
+        int exitCmp = strncmp(buffer, "exit\n", 5);
 
-          int quitCmp = strncmp(buffer, "quit\n", 5);
-          int exitCmp = strncmp(buffer, "exit\n", 5);
+        if(quitCmp == 0) {
+          printf("`quit` signal received.  Closing server.\n");
+          quit = 1;
+          break;
+        }
+        if(exitCmp == 0) {
+          printf("--- client connection exited ---\n");
+          break;
+        }
 
-          if(quitCmp == 0) {
-            printf("`quit` signal received.  Closing server.\n");
-            quit = 1;
-            break;
-          }
-          if(exitCmp == 0) {
-            printf("--- client connection exited ---\n");
-            break;
-          }
-
-          printf("%s", buffer);
+        printf("%s", buffer);
 
         // current = current->next;
+      } else {
+        break;
       }
     }
 
