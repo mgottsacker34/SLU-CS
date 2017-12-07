@@ -96,7 +96,7 @@ int main( int argc, char* argv[] ) {
       // printf("exiting program\n");
       // exit(0);
     } else {
-      printf("--- new connection established ---\n");
+      printf("--- new user has joined. ---\n");
       if(head->fd == NULL){
         printf("First client\n");
         head->fd = server_accept;
@@ -151,6 +151,9 @@ int main( int argc, char* argv[] ) {
 
           int quitCmp = strncmp(buffer, "quit\n", 5);
           int exitCmp = strncmp(buffer, "exit\n", 5);
+          int setNameCmp = strncmp(buffer, "name\n", 5);
+
+          int listCmp = strncmp(buffer, "list\n", 5);
 
           if(quitCmp == 0) {
             printf("`quit` signal received.  Closing server.\n");
@@ -158,22 +161,27 @@ int main( int argc, char* argv[] ) {
             break;
           }
           if(exitCmp == 0) {
-            printf("--- client connection exited ---\n");
+            printf("--- %s has left the chat. ---\n", current->username);
+            break;
+          }
+          if(setNameCmp == 0){
+            write(current->fd, "Enter a new username: ", 22);
             break;
           }
 
           //Checking list
-          int listCmp = strncmp(buffer, "list\n", 5);
           if(listCmp == 0) {
             struct Client *thisone = head;
             while(thisone != NULL) {
-              printf("current fd: %d\n", thisone->fd);
+              printf("user #%d: %s\n", thisone->fd, current->username);
               thisone = thisone->next;
             }
           }
-          
 
+
+          // printf("%s: %s", current->username, buffer);
           printf("%s", buffer);
+
           if (current->next == NULL) {
             break;
           }
