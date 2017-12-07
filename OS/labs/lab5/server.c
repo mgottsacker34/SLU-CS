@@ -26,13 +26,14 @@ struct Client{
 int main( int argc, char* argv[] ) {
 
   int quit = 0; //enables program to quit when quit is sent from client
-  fd_set input_set;
-  struct timeval timeout;
-  int ready_for_reading = 0;
-  int read_bytes = 0;
-  timeout.tv_sec = 0;
-  timeout.tv_usec = 100;
+  // fd_set input_set;
+  // struct timeval timeout;
+  // int ready_for_reading = 0;
+  // int read_bytes = 0;
+  // timeout.tv_sec = 0;
+  // timeout.tv_usec = 100;
   int reaccept = 0;
+
 
 
   struct Client *head = malloc(sizeof(struct Client));
@@ -43,6 +44,7 @@ int main( int argc, char* argv[] ) {
   printf("Set head->next\n");
   struct Client *tail = malloc(sizeof(struct Client));
   tail = head;
+  struct Client *current = head;
 
   int server_socket = socket(AF_INET, SOCK_STREAM, 0);
   if(server_socket == -1) {
@@ -98,7 +100,7 @@ int main( int argc, char* argv[] ) {
       if(head->fd == NULL){
         printf("First client\n");
         head->fd = server_accept;
-        printf("Server accept set\n");
+        printf("New client's fd is %d\n", tail->fd);
         head->username = "User";
         printf("Username set\n");
         head->next = NULL;
@@ -106,10 +108,15 @@ int main( int argc, char* argv[] ) {
         tail = head;
         printf("After tail = head\n");
       } else {
+        printf("Pre set tail to next\n");
+        // tail = tail->next;
+        printf("Post set tail to next\n");
+        tail->next = malloc(sizeof(struct Client));
+        tail->next->fd = server_accept;
+        printf("New client's fd is %d\n", tail->fd);
+        tail->next->username = "User";
+        tail->next->next = NULL;
         tail = tail->next;
-        tail->fd = server_accept;
-        tail->username = "User";
-        tail->next = NULL;
       }
     }
 
@@ -126,10 +133,11 @@ int main( int argc, char* argv[] ) {
       //try and read from socket
       // printf("Before setting current\n");
       reaccept = 0;
-      struct Client *current = head;
+      current = head;
       // printf("After setting current\n");
       while(current != NULL) {
         if (current->fd != NULL) {
+          // printf("current fd: %d\n", current->fd);
           char buffer[bufferSize];
           memset(buffer, 0, bufferSize);
 
@@ -152,6 +160,16 @@ int main( int argc, char* argv[] ) {
           if(exitCmp == 0) {
             printf("--- client connection exited ---\n");
             break;
+          }
+
+          //Checking list
+          int listCmp = strncmp(buffer, "list\n", 5);
+          if(listCmp == 0) {
+            struct Client *thisone = head;
+            while(thisone != NULL) {
+              printf("current fd: %d\n", thisone->fd);
+              thisone = thisone->next;
+            }
           }
 
           printf("%s", buffer);
