@@ -165,7 +165,9 @@ int main( int argc, char* argv[] ) {
             break;
           }
           if(setNameCmp == 0){
-            write(current->fd, "Enter a new username: ", 22);
+            char setNameString[bufferSize] = "Enter a new username: ";
+            printf("User #%d: %s is setting a new username.", current->fd, current->username);
+            write(current->fd, setNameString, bufferSize-1);
             break;
           }
 
