@@ -11,6 +11,8 @@
 #include <netinet/in.h>
 #include <sys/time.h>
 #include <fcntl.h>
+#include <arpa/inet.h>
+
 
 
 #define MY_SOCK_PATH "COOL_PATH"
@@ -28,12 +30,13 @@ int main( int argc, char* argv[] ) {
   int quit = 0; //enables program to quit when quit is sent from client
   int reaccept = 0;
 
-  if(argc != 2) {
-    printf("Program requires 1 argument.\nExiting.\n");
+  if(argc != 3) {
+    printf("Program requires 2 arguments. Proper syntax: ./server <ip address> <port>\nExiting.\n");
     exit(-1);
   }
 
-  int PORT = atoi(argv[1]);
+  char* ADDR = (argv[1]);
+  int PORT = atoi(argv[2]);
 
   struct Client *head = malloc(sizeof(struct Client));
   printf("Initialized head\n");
@@ -65,7 +68,7 @@ int main( int argc, char* argv[] ) {
 
   memset(&serv_addr, 0, sizeof(struct sockaddr_in));  //Clears structure
   serv_addr.sin_family = AF_INET;
-  serv_addr.sin_addr.s_addr = INADDR_ANY;
+  serv_addr.sin_addr.s_addr = inet_addr(ADDR);
   serv_addr.sin_port = htons(PORT);
   // strncpy(serv_addr.sin_path, MY_SOCK_PATH, sizeof(serv_addr.sin_path) - 1);
 

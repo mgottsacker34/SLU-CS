@@ -8,9 +8,10 @@
 #include <errno.h>
 #include <unistd.h>
 #include <netinet/in.h>
+#include <arpa/inet.h>
 // #define PORT 8889
 
-#define MY_SOCK_PATH "COOL_PATH"
+// #define MY_SOCK_PATH "COOL_PATH"
 #define bufferSize 2048
 #define thread_buffer 2048
 
@@ -60,12 +61,13 @@ void* write_thread(void* args) {
 
 int main( int argc, char* argv[] ) {
 
-  if(argc != 2) {
-    printf("Program requires 1 argument.\nExiting.\n");
+  if(argc != 3) {
+    printf("Program requires 2 arguments. Proper syntax: ./client <ip address> <port>\nExiting.\n");
     exit(-1);
   }
 
-  int PORT = atoi(argv[1]);
+  char* ADDR = (argv[1]);
+  int PORT = atoi(argv[2]);
 
   char buffer[bufferSize];
   char buffer2[bufferSize];
@@ -80,7 +82,7 @@ int main( int argc, char* argv[] ) {
   memset(&client_addr, 0, sizeof(struct sockaddr_in));  //Clears structure
 
   client_addr.sin_family = AF_INET;
-  client_addr.sin_addr.s_addr = INADDR_ANY;
+  client_addr.sin_addr.s_addr = inet_addr(ADDR);
   client_addr.sin_port = htons(PORT);
   // strncpy(client_addr.sin_path, MY_SOCK_PATH, sizeof(client_addr.sin_path) - 1);
 
