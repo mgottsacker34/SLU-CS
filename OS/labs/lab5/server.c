@@ -32,11 +32,12 @@ int main( int argc, char* argv[] ) {
   int read_bytes = 0;
   timeout.tv_sec = 0;
   timeout.tv_usec = 100;
+  int reaccept = 0;
 
 
   struct Client *head = malloc(sizeof(struct Client));
   printf("Initialized head\n");
-  head->fd = -1;
+  head->fd = NULL;
   head->username = NULL;
   head->next = NULL;
   printf("Set head->next\n");
@@ -87,13 +88,14 @@ int main( int argc, char* argv[] ) {
     socklen_t client_addr_size = sizeof(struct sockaddr_in);
     // printf("Pre server accept\n");
     int server_accept = accept4(server_socket, (struct sockaddr *) &client_addr, &client_addr_size, SOCK_NONBLOCK);
+    // printf("%d\n", server_accept);
     if(server_accept == -1) {
       // perror("error calling accept");
       // printf("exiting program\n");
       // exit(0);
     } else {
       printf("--- new connection established ---\n");
-      if(head->next == NULL){
+      if(head->fd == NULL){
         printf("First client\n");
         head->fd = server_accept;
         printf("Server accept set\n");
@@ -103,7 +105,7 @@ int main( int argc, char* argv[] ) {
         printf("Before tail = head\n");
         tail = head;
         printf("After tail = head\n");
-      }else{
+      } else {
         tail = tail->next;
         tail->fd = server_accept;
         tail->username = "User";
@@ -111,47 +113,60 @@ int main( int argc, char* argv[] ) {
       }
     }
 
+    // struct Client *current = head;
+    // // printf("After setting current\n");
+    // while(current != NULL) {
+    //   printf("current fd: %d", current->fd);
+    // }
 
 
-    for(;;) {
 
+    // for(;;) {
+      // printf("Dear god help me I'm trapped in this loop\n");
       //try and read from socket
       // printf("Before setting current\n");
+      reaccept = 0;
       struct Client *current = head;
       // printf("After setting current\n");
-      if (current->fd != -1) {
-        char buffer[bufferSize];
-        memset(buffer, 0, bufferSize);
+      while(current != NULL) {
+        if (current->fd != NULL) {
+          char buffer[bufferSize];
+          memset(buffer, 0, bufferSize);
 
-        int read_cli = read(current->fd, buffer, bufferSize-1);
+          int read_cli = read(current->fd, buffer, bufferSize-1);
 
-        // if(read_cli == -1) {
-        //   perror("error calling read");
-        //   printf("exiting program\n");
-        //   exit(0);
-        // }
+          // if(read_cli == -1) {
+          //   perror("error calling read");
+          //   printf("exiting program\n");
+          //   exit(0);
+          // }
 
-        int quitCmp = strncmp(buffer, "quit\n", 5);
-        int exitCmp = strncmp(buffer, "exit\n", 5);
+          int quitCmp = strncmp(buffer, "quit\n", 5);
+          int exitCmp = strncmp(buffer, "exit\n", 5);
 
-        if(quitCmp == 0) {
-          printf("`quit` signal received.  Closing server.\n");
-          quit = 1;
-          break;
+          if(quitCmp == 0) {
+            printf("`quit` signal received.  Closing server.\n");
+            quit = 1;
+            break;
+          }
+          if(exitCmp == 0) {
+            printf("--- client connection exited ---\n");
+            break;
+          }
+
+          printf("%s", buffer);
+          if (current->next == NULL) {
+            break;
+          }
+          current = current->next;
+        } else {
+          current = current->next;
         }
-        if(exitCmp == 0) {
-          printf("--- client connection exited ---\n");
-          break;
-        }
-
-        printf("%s", buffer);
-
-        // current = current->next;
-      } else {
-        break;
       }
-    }
-
+    //   if(reaccept == 1) {
+    //     break;
+    //   }
+    // }
 
     if (quit == 1) {
       break;
