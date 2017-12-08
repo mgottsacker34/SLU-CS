@@ -37,7 +37,7 @@ int main( int argc, char* argv[] ) {
     if (reader==0) {
       break;
     }
-    printf("buffer: %s\n", buffer);
+    // printf("buffer: %s\n", buffer);
 
     int quitCmp = strncmp(buffer, "quit\n", 5);
     int exitCmp = strncmp(buffer, "exit\n", 5);
@@ -65,7 +65,7 @@ int main( int argc, char* argv[] ) {
 
       int read_cli = read(client_socket, buffer2, 512);
       if(read_cli == 0){
-        quit = 1;
+        // quit = 1;
         break;
       }
       if(read_cli == -1) {
@@ -74,10 +74,10 @@ int main( int argc, char* argv[] ) {
         exit(0);
       }
       printf("%s", buffer2);
-      quit = 1;
+      // quit = 1;
       // break;
     }
-    printf("Here\n");
+    // printf("Here\n");
 
     if(quit == 1){
       break;

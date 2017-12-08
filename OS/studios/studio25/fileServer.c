@@ -45,6 +45,8 @@ int main( int argc, char* argv[] ) {
     exit(0);
   }
 
+  int cont = 0;
+
   //call accept
   for(;;) {
     socklen_t client_addr_size = sizeof(struct sockaddr_un);
@@ -58,7 +60,7 @@ int main( int argc, char* argv[] ) {
     }
 
     for(;;) {
-
+      cont = 0;
       //try and read from socket
       char buffer[bufferSize];
       memset(buffer, 0, bufferSize);
@@ -72,7 +74,7 @@ int main( int argc, char* argv[] ) {
       int quitCmp = strncmp(buffer, "quit\n", 5);
       int exitCmp = strncmp(buffer, "exit\n", 5);
       int lsCmp = strncmp(buffer, "ls\n", 3);
-      int cont = 0;
+
 
 
       if(quitCmp == 0) {
@@ -89,23 +91,28 @@ int main( int argc, char* argv[] ) {
         FILE *in;
         extern FILE *popen();
         char buff_ls[512];
+
         if(!(in = popen("ls", "r"))){
             exit(1);
         }
-        while(fgets(buff_ls, sizeof(buff_ls), in)!=NULL){
-          fflush(stdout);
+        while(fgets(buff_ls, 512, in)!=NULL){
             write(server_accept, buff_ls, 512);
             printf("%s", buff_ls);
-            printf("Here\n");
+            // printf("Here\n");
         }
+        // fflush(stdout);
         cont = 1;
         pclose(in);
-        printf("Close in");
+        // printf("Close in\n");
         // break;
-        continue;
+        // continue;
       }
 
-      printf("%s", buffer);
+      // printf("buffer: %s, cont: %d\n", buffer, cont);
+      if(cont == 1){
+        //if cont is set, then go back to top of this loop
+        continue;
+      }
 
       //open file to print
       const char *path = strtok(buffer, "\n");
