@@ -92,15 +92,19 @@ int main( int argc, char* argv[] ) {
     int server_accept = accept4(server_socket, (struct sockaddr *) &client_addr, &client_addr_size, SOCK_NONBLOCK);
     if(server_accept != -1) {
       if(head->fd == NULL){
+        char* uname = malloc(6);
+        int sprinter = sprintf(uname, "User%d", server_accept);
         head->fd = server_accept;
-        head->username = "User";
+        head->username = uname;
         head->next = NULL;
         tail = head;
         new_client = 1;
       } else {
+        char* uname = malloc(6);
+        int sprinter = sprintf(uname, "User%d", server_accept);
         tail->next = malloc(sizeof(struct Client));
         tail->next->fd = server_accept;
-        tail->next->username = "User";
+        tail->next->username = uname;
         tail->next->next = NULL;
         tail = tail->next;
         new_client = 1;
