@@ -25,7 +25,7 @@ struct Client{
 
 int main( int argc, char* argv[] ) {
 
-  int quit = 0; //enables program to quit when quit is sent from client
+  // int quit = 0; //enables program to quit when quit is sent from client
   int reaccept = 0;
 
   if(argc != 2) {
@@ -150,30 +150,58 @@ int main( int argc, char* argv[] ) {
           // }
 
           int quitCmp = strncmp(buffer, "quit\n", 5);
-          int exitCmp = strncmp(buffer, "exit\n", 5);
+          // int exitCmp = strncmp(buffer, "exit\n", 5);
           int nameCmp = strncmp(buffer, "name ", 5);
 
           int listCmp = strncmp(buffer, "list\n", 5);
 
           if(quitCmp == 0) {
-            printf("`quit` signal received.  Closing server.\n");
-            quit = 1;
+            printf("%s has left the chat.\n", current->username);
+            current_sender = head;
+            while(current_sender != NULL) {
+              if (current_sender->fd != current->fd) {
+                // printf("writing\n");
+                // write(current_sender->fd, "Gottsacker sucks\n", 17);
+
+                char *quitter = malloc(strlen(current_sender->username) + strlen(" has left the chat.\n"));
+                strcpy(quitter, current->username);
+                strcat(quitter, " has left the chat.\n");
+                write(current_sender->fd, quitter, bufferSize);
+              }
+              current_sender = current_sender->next;
+            }
+            // printf("`quit` signal received.  Closing server.\n");
+            // quit = 1;
             break;
           }
-          if(exitCmp == 0) {
-            printf("--- %s has left the chat. ---\n", current->username);
-            break;
-          }
+
+          // if(exitCmp == 0) {
+          //   printf("--- %s has left the chat. ---\n", current->username);
+          //   break;
+          // }
+
           if(nameCmp == 0){
-            printf("In nameCmp\n");
+            // printf("In nameCmp\n");
             char *newName = buffer;
             newName = (newName+5);
             char* res = malloc(strlen(buffer-5));
             res = strncpy(res, newName, strlen(newName)-1);
             // newName = strtok(newName, "\n");
+            current_sender = head;
+            while(current_sender != NULL) {
+              if (current_sender->fd != current->fd) {
+                char *name_change = malloc(strlen(current_sender->username) + strlen(" changed name to ") + strlen(res) + 1);
+                strcpy(name_change, current->username);
+                strcat(name_change, " changed name to ");
+                strcat(name_change, res);
+                strcat(name_change, "\n");
+                write(current_sender->fd, name_change, bufferSize);
+              }
+              current_sender = current_sender->next;
+            }
             printf("%s changed name to %s\n", current->username, res);
             current->username = res;
-            printf("name set to: %s", current->username);
+
             break;
           }
 
@@ -196,7 +224,7 @@ int main( int argc, char* argv[] ) {
           while(current_sender != NULL) {
             if (current_sender->fd != current->fd) {
               if (strlen(buffer) != 0) {
-                printf("writing\n");
+                // printf("writing\n");
                 // write(current_sender->fd, "Gottsacker sucks\n", 17);
 
                 char *result = malloc(strlen(current->username) + strlen(buffer) + 3);
@@ -222,10 +250,10 @@ int main( int argc, char* argv[] ) {
     //     break;
     //   }
     // }
-
-    if (quit == 1) {
-      break;
-    }
+    //
+    // if (quit == 1) {
+    //   break;
+    // }
   }
 
   //unlink the socket/path/whatever

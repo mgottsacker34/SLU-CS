@@ -42,18 +42,20 @@ void* write_thread(void* args) {
       break;
     }
     int quitCmp = strncmp(arg_ptr->buffer, "quit\n", 5);
-    int exitCmp = strncmp(arg_ptr->buffer, "exit\n", 5);
+    // int exitCmp = strncmp(arg_ptr->buffer, "exit\n", 5);
 
     write(arg_ptr->fd, arg_ptr->buffer, reader);
 
     if(quitCmp == 0) {
-      printf("`quit` signal received.  Disconnecting user and shutting down server.\n");
-      break;
+      // printf("`quit` signal received.  Disconnecting user and shutting down server.\n");
+      printf("`quit` signal received. Disconnecting user.\n");
+      exit(0);
+      // break;
     }
-    if(exitCmp == 0) {
-      printf("`exit` signal received.  Disconnecting user.\n");
-      break;
-    }
+    // if(exitCmp == 0) {
+    //   printf("`exit` signal received. Disconnecting user.\n");
+    //   break;
+    // }
   }
   return NULL;
 }
@@ -121,10 +123,6 @@ int main( int argc, char* argv[] ) {
     printf("Error join write thread. Error #%d. Exiting.\n", write_join_ret);
     exit(-1);
   }
-
-
-
-
 
   return 0;
 
