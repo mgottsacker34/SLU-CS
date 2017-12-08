@@ -10,7 +10,7 @@
 
 
 #define MY_SOCK_PATH "COOL_PATH"
-#define bufferSize 200
+#define bufferSize 512
 
 int main( int argc, char* argv[] ) {
 
@@ -72,6 +72,7 @@ int main( int argc, char* argv[] ) {
       int quitCmp = strncmp(buffer, "quit\n", 5);
       int exitCmp = strncmp(buffer, "exit\n", 5);
       int lsCmp = strncmp(buffer, "ls\n", 3);
+      int cont = 0;
 
 
       if(quitCmp == 0) {
@@ -85,18 +86,27 @@ int main( int argc, char* argv[] ) {
       }
 
       if(lsCmp == 0) {
-        FILE *in;
-        extern FILE *popen();
-        char buff_ls[512];
-        if(!(in = popen("ls", "r"))){
-            exit(1);
+        // FILE *in;
+        // extern FILE *popen();
+        FILE *in = popen("ls *", "r");
+        if(in == NULL){
+          exit(-1);
         }
+        char buff_ls[512];
+        // if(!(in = popen("ls", "r"))){
+        //     exit(1);
+        // }
         while(fgets(buff_ls, sizeof(buff_ls), in)!=NULL){
+          fflush(stdout);
             write(server_accept, buff_ls, 512);
             printf("%s", buff_ls);
+            printf("Here\n");
         }
+        cont = 1;
         pclose(in);
-        break;
+        printf("Close in");
+        // break;
+        continue;
       }
 
       printf("%s", buffer);
@@ -120,15 +130,19 @@ int main( int argc, char* argv[] ) {
           }
           write(server_accept, buffer, file_reader);
       }
+      quit = 1;
 
       if (quit == 1) {
         break;
       }
     }
 
+
     if (quit == 1) {
+      int shut = shutdown(server_accept, SHUT_RDWR);
       break;
     }
+
   }
 
   //unlink the socket/path/whatever
