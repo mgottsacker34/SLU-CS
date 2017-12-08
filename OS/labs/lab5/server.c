@@ -99,6 +99,8 @@ int main( int argc, char* argv[] ) {
         head->next = NULL;
         tail = head;
         new_client = 1;
+        printf("--- %s has joined. ---\n", uname);
+
       } else {
         char* uname = malloc(6);
         int sprinter = sprintf(uname, "User%d", server_accept);
@@ -108,8 +110,9 @@ int main( int argc, char* argv[] ) {
         tail->next->next = NULL;
         tail = tail->next;
         new_client = 1;
+        printf("--- %s has joined. ---\n", uname);
+
       }
-      printf("--- new user has joined. ---\n");
     }
 
     //try and read from socket
