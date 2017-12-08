@@ -86,16 +86,12 @@ int main( int argc, char* argv[] ) {
       }
 
       if(lsCmp == 0) {
-        // FILE *in;
-        // extern FILE *popen();
-        FILE *in = popen("ls *", "r");
-        if(in == NULL){
-          exit(-1);
-        }
+        FILE *in;
+        extern FILE *popen();
         char buff_ls[512];
-        // if(!(in = popen("ls", "r"))){
-        //     exit(1);
-        // }
+        if(!(in = popen("ls", "r"))){
+            exit(1);
+        }
         while(fgets(buff_ls, sizeof(buff_ls), in)!=NULL){
           fflush(stdout);
             write(server_accept, buff_ls, 512);
