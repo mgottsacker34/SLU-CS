@@ -111,16 +111,24 @@ int main( int argc, char* argv[] ) {
         tail = tail->next;
         new_client = 1;
         printf("--- %s has joined. ---\n", uname);
-
       }
+    }
+
+    if(new_client == 1) {
+      current_sender = head;
+      while(current_sender->next != NULL) {
+        char *joiner = malloc(strlen("--- new user has joined. ---\n"));
+        strcpy(joiner, "--- new user has joined. ---\n");
+        write(current_sender->fd, joiner, bufferSize);
+        current_sender = current_sender->next;
+      }
+      new_client = 0;
     }
 
     //try and read from socket
     current = head;
     while(current != NULL) {
       if (current->fd != NULL) {
-
-
 
         char buffer[bufferSize];
         memset(buffer, 0, bufferSize);
@@ -131,7 +139,6 @@ int main( int argc, char* argv[] ) {
         //   printf("exiting program\n");
         //   exit(0);
         // }
-
 
         int quitCmp = strncmp(buffer, "quit\n", 5);
         int nameCmp = strncmp(buffer, "name ", 5);
@@ -174,19 +181,6 @@ int main( int argc, char* argv[] ) {
           current->username = res;
 
           break;
-        }
-
-        if(new_client == 1) {
-          current_sender = head;
-          while(current_sender != NULL) {
-            if (current_sender->fd != current->fd) {
-              char *joiner = malloc(strlen("--- new user has joined. ---\n"));
-              strcpy(joiner, "--- new user has joined. ---\n");
-              write(current_sender->fd, joiner, bufferSize);
-            }
-            current_sender = current_sender->next;
-          }
-          new_client = 0;
         }
 
         if (strlen(buffer) != 0) {
