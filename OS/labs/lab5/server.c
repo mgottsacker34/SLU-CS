@@ -10,7 +10,6 @@
 #include <fcntl.h>
 #include <netinet/in.h>
 #include <sys/time.h>
-#include <fcntl.h>
 #include <arpa/inet.h>
 
 
@@ -85,6 +84,7 @@ int main( int argc, char* argv[] ) {
     printf("exiting program\n");
     exit(0);
   }
+  int quit = 0;
 
   //call accept
   for(;;) {
@@ -118,7 +118,7 @@ int main( int argc, char* argv[] ) {
       current_sender = head;
       while(current_sender->next != NULL) {
         char *joiner = malloc(strlen("--- new user has joined. ---\n"));
-        strcpy(joiner, "--- new user has joined. ---\n");
+        strncpy(joiner, "--- new user has joined. ---\n", 29);
         write(current_sender->fd, joiner, bufferSize);
         current_sender = current_sender->next;
       }
@@ -134,25 +134,25 @@ int main( int argc, char* argv[] ) {
         memset(buffer, 0, bufferSize);
 
         int read_cli = read(current->fd, buffer, bufferSize-1);
-        // if(read_cli == -1) {
-        //   perror("error calling read");
-        //   printf("exiting program\n");
-        //   exit(0);
-        // }
+        //if the socket read() fails, and does not return the nonblocking error code, print that the user quit.
+        if(read_cli == -1 && (errno != EAGAIN || errno != EWOULDBLOCK) ){
+          perror("read error");
+          exit(-1);
+        }
 
         int quitCmp = strncmp(buffer, "quit\n", 5);
         int nameCmp = strncmp(buffer, "name ", 5);
         int listCmp = strncmp(buffer, "list\n", 5);
 
-        if(quitCmp == 0) {
+        if(quitCmp == 0 || read_cli == 0) {
           printf("%s has left the chat.\n", current->username);
           current->fd = NULL;
           current_sender = head;
           while(current_sender != NULL) {
             if (current_sender->fd != current->fd) {
               char *quitter = malloc(strlen(current_sender->username) + strlen(" has left the chat.\n"));
-              strcpy(quitter, current->username);
-              strcat(quitter, " has left the chat.\n");
+              strncpy(quitter, current->username, strlen(current->username));
+              strncat(quitter, " has left the chat.\n", 20);
               write(current_sender->fd, quitter, bufferSize);
             }
             current_sender = current_sender->next;
@@ -169,10 +169,10 @@ int main( int argc, char* argv[] ) {
           while(current_sender != NULL) {
             if (current_sender->fd != current->fd) {
               char *name_change = malloc(strlen(current_sender->username) + strlen(" changed name to ") + strlen(res) + 1);
-              strcpy(name_change, current->username);
-              strcat(name_change, " changed name to ");
-              strcat(name_change, res);
-              strcat(name_change, "\n");
+              strncpy(name_change, current->username, strlen(current->username));
+              strncat(name_change, " changed name to ", 17);
+              strncat(name_change, res, strlen(res));
+              strncat(name_change, "\n", 1);
               write(current_sender->fd, name_change, bufferSize);
             }
             current_sender = current_sender->next;
@@ -195,9 +195,9 @@ int main( int argc, char* argv[] ) {
               // write(current_sender->fd, "Gottsacker sucks\n", 17);
 
               char *result = malloc(strlen(current->username) + strlen(buffer) + 3);
-              strcpy(result, current->username);
-              strcat(result, ": ");
-              strcat(result, buffer);
+              strncpy(result, current->username, strlen(current->username));
+              strncat(result, ": ", 2);
+              strncat(result, buffer, strlen(buffer));
               write(current_sender->fd, result, bufferSize);
 
             }
@@ -209,6 +209,7 @@ int main( int argc, char* argv[] ) {
         //   break;
         // }
         current = current->next;
+
       } else {
         current = current->next;
       }
